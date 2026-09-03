@@ -162,18 +162,20 @@
 </div>
 
 <script>
-// ———— 曼陀沙华 · 花茎生长 × 花苞绽放 × 落瓣 ————（引擎参考: 贝塞尔枝干/逐瓣绽放, 原版为 jQuery+jscex 重彩花树, 此处零依赖重建）
+// ———— 曼陀沙华 · 全幅背景版（生长 × 绽放 × 落瓣，零依赖）————
 (function(){
   var cv=document.getElementById('fbg'),ctx=cv.getContext('2d'),w,h;
+  if(!ctx)return;
   var reduced=matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var T0=performance.now();
   var pts=[],fall=[],lastFall=0;
-  var BX,BY,STALK_LEN,P1x,P1y,PETS=54,STAM=8;
+  var BX,BY,S,STALK_LEN,P1x,P1y,PETS=64,STAM=9;
   function rs(){
     w=cv.width=innerWidth;h=cv.height=innerHeight;
-    BX=w*0.855; BY=h+8;
-    STALK_LEN=Math.min(h*0.40,300);
-    P1x=BX+w*0.018; P1y=BY-STALK_LEN*0.55;
+    BX=w*0.5; BY=h+14;
+    S=Math.max(.7,Math.min(1.7,Math.min(w,h*1.15)/820));   // 随屏等比放大
+    STALK_LEN=Math.min(h*0.68,520*S);                      // 花茎贯穿整个背景
+    P1x=BX+w*0.012; P1y=BY-STALK_LEN*0.52;
   }
   rs();addEventListener('resize',rs);
   var cols=['34,211,238','167,139,250','94,234,212'];
@@ -183,70 +185,84 @@
   function clampX(v,a,b){return Math.max(a,Math.min(b,v));}
   function easeOut(x){return 1-Math.pow(1-x,3);}
 
-  // 花茎（贝塞尔，底缘斜上）
+  function drawAura(sway){
+    var cx=BX+Math.sin(sway)*STALK_LEN*.1, cy=BY-STALK_LEN;
+    var r=STALK_LEN*.62;
+    var g=ctx.createRadialGradient(cx,cy,r*.1,cx,cy,r);
+    g.addColorStop(0,'rgba(255,51,72,.16)');
+    g.addColorStop(.55,'rgba(180,20,45,.07)');
+    g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g;
+    ctx.fillRect(cx-r,cy-r,r*2,r*2);
+  }
+
   function drawStalk(p,sway){
-    var tip={x:Math.sin(sway)*14,y:-STALK_LEN};
+    var tip={x:Math.sin(sway)*20*S,y:-STALK_LEN};
     ctx.save();ctx.translate(BX,BY);
     ctx.beginPath();
-    for(var k=0;k<=24;k++){
-      var pt=qb({x:0,y:0},{x:P1x-BX,y:P1y-BY},tip,k/24*p);
+    for(var k=0;k<=26;k++){
+      var pt=qb({x:0,y:0},{x:(P1x-BX),y:(P1y-BY)},tip,k/26*p);
       k===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y);
     }
-    ctx.lineWidth=4.4;
-    ctx.strokeStyle='#802c3c';
-    ctx.shadowColor='rgba(255,51,72,.45)';ctx.shadowBlur=10;
-    ctx.stroke();ctx.restore();
+    ctx.lineWidth=5*S;
+    ctx.strokeStyle='#8a2e40';
+    ctx.shadowColor='rgba(255,51,72,.55)';ctx.shadowBlur=14;
+    ctx.stroke();
+    // 茎上高光
+    ctx.lineWidth=1.4*S;
+    ctx.strokeStyle='rgba(255,120,150,.35)';
+    ctx.shadowBlur=0;
+    ctx.stroke();
+    ctx.restore();
   }
-  // 草叶两片
   function drawLeaves(g,sway){
     ctx.save();ctx.translate(BX,BY);ctx.rotate(sway*.5);ctx.lineCap='round';
     [-1,1].forEach(function(dr){
-      var L=Math.min(70,STALK_LEN*.28)*g;
-      if(L<2)return;
+      var L=Math.min(150,STALK_LEN*.34)*g*S;
+      if(L<3)return;
       ctx.beginPath();
-      ctx.moveTo(0,-6);
-      ctx.quadraticCurveTo(dr*L*.45,-12,dr*L*.9,-6-L);
-      ctx.lineWidth=3.2;
+      ctx.moveTo(0,-8*S);
+      ctx.quadraticCurveTo(dr*L*.45,-20,dr*L*.95,-10-L);
+      ctx.lineWidth=4*S;
       ctx.strokeStyle='#2f7d55';
-      ctx.shadowColor='rgba(60,180,120,.3)';ctx.shadowBlur=6;
+      ctx.shadowColor='rgba(60,180,120,.4)';ctx.shadowBlur=10;
       ctx.stroke();
     });
     ctx.restore();
   }
-  // 花蕊（细丝外射，黄点到头）
   function drawStamens(g,sway){
     ctx.save();ctx.translate(BX,BY-STALK_LEN);ctx.rotate(sway);
-    var L=26*g;
-    if(L<2)return;
+    var L=40*S*g;
+    if(L<3)return;
     for(var k=0;k<STAM;k++){
       var a=k*Math.PI*2/STAM+Math.PI/7;
       var ox=Math.cos(a),oy=Math.sin(a);
       ctx.beginPath();
-      ctx.moveTo(ox*3,oy*3);
+      ctx.moveTo(ox*4*S,oy*4*S);
       ctx.quadraticCurveTo(ox*L*.7+(-oy)*L*.18,oy*L*.7+ox*L*.18,ox*L,oy*L);
-      ctx.lineWidth=1.1;
-      ctx.strokeStyle='#9c2438';
+      ctx.lineWidth=1.5*S;
+      ctx.strokeStyle='#a9273d';
+      ctx.shadowColor='rgba(255,60,90,.6)';ctx.shadowBlur=8;
       ctx.stroke();
     }
     for(var k2=0;k2<STAM;k2++){
       var a2=k2*Math.PI*2/STAM+Math.PI/7;
       ctx.beginPath();
-      ctx.arc(Math.cos(a2)*L,Math.sin(a2)*L,1.8,0,7);
+      ctx.arc(Math.cos(a2)*L,Math.sin(a2)*L,2.6*S,0,7);
       ctx.fillStyle='#ffd166';
-      ctx.shadowColor='rgba(255,209,102,.8)';ctx.shadowBlur=6;
+      ctx.shadowColor='rgba(255,209,102,.9)';ctx.shadowBlur=12;
       ctx.fill();
     }
     ctx.restore();
   }
-  // 花瓣路径：外射 + 末端回勾（曼陀沙华回卷瓣）
-  function petalPath(ang,L,curl){
+  function petalPath(ang,L,curl,S){ // 外射 + 末端回勾, 用S缩放全部坐标
     var ox=Math.cos(ang),oy=Math.sin(ang),px=-oy,py=ox;
+    function q(ax,ay){return [ox*L*ax+px*L*ay*curl, oy*L*ax+py*L*ay*curl];}
+    var m1=q(.52,.22),m2=q(.92,.1),m3=q(1.04,.06),m4=q(.86,.46),m5=q(.5,.05);
     ctx.moveTo(0,0);
-    ctx.quadraticCurveTo(ox*L*.52+px*L*.22*curl,oy*L*.52+py*L*.22*curl,
-      ox*L*.92+px*L*.1*curl,oy*L*.92+py*L*.1*curl);
-    ctx.quadraticCurveTo(ox*L*1.04+px*L*.06*curl,oy*L*1.04+py*L*.06*curl,
-      ox*L*.86+px*L*.46*curl,oy*L*.86+py*L*.46*curl);
-    ctx.quadraticCurveTo(ox*L*.5+px*L*.05*curl,oy*L*.5+py*L*.05*curl,0,0);
+    ctx.quadraticCurveTo(m1[0],m1[1],m2[0],m2[1]);
+    ctx.quadraticCurveTo(m3[0],m3[1],m4[0],m4[1]);
+    ctx.quadraticCurveTo(m5[0],m5[1],0,0);
     ctx.closePath();
   }
   function drawBloom(bp,sway){
@@ -257,85 +273,89 @@
       if(bp<=start)continue;
       var pop=easeOut(clampX((bp-start)*PETS*.5,0,1));
       var a=i*Math.PI*2/PETS+Math.PI/2+Math.sin(i*1.7)*.16;
-      var L=(44+((i*7)%3)*14+(i%2)*6)*pop;
-      if(L<4)continue;
+      var L=(56+((i*7)%3)*16+(i%2)*8)*S*pop;
+      if(L<5)continue;
       var curl=(i%3===0?1:(i%3===1?1.35:.8));
       ctx.beginPath();
-      petalPath(a,L,curl);
-      ctx.globalAlpha=.94;
-      ctx.fillStyle='hsl('+(348+(i%3)*4)+','+(80+(i%2?4:0))+'%,'+(46+(i%3)*7)+'%)';
-      ctx.shadowColor='rgba(255,51,72,.7)';ctx.shadowBlur=9;
+      petalPath(a,L,curl,S);
+      ctx.globalAlpha=.95;
+      ctx.fillStyle='hsl('+(349+(i%4)*3)+','+(84+(i%2?4:0))+'%,'+(52+(i%4)*5)+'%)';
+      ctx.shadowColor='rgba(255,51,72,.85)';ctx.shadowBlur=12;
       ctx.fill();
     }
     ctx.restore();ctx.globalAlpha=1;
   }
-  // 落瓣
   function spawnFall(n){
-    if(fall.length>26)return;
+    if(fall.length>34)return;
+    var cx=BX+Math.sin(lastSway||0)*STALK_LEN*.1;
     for(var i=0;i<(n||1);i++)fall.push({
-      x:BX+(Math.random()-.5)*110, y:BY-STALK_LEN+(Math.random()-.5)*60,
-      vx:(Math.random()-.5)*.55, vy:.55+Math.random()*.85,
+      x:cx+(Math.random()-.5)*STALK_LEN*.4, y:BY-STALK_LEN+(Math.random()-.5)*STALK_LEN*.2,
+      vx:(Math.random()-.5)*.6, vy:.55+Math.random()*.95,
       rot:Math.random()*6.3, vr:(Math.random()-.5)*.07,
-      s:7+Math.random()*7, a:.9
+      s:(8+Math.random()*8)*S, a:.92
     });
   }
+  var lastSway=0;
   function drawFallPetals(){
     fall=fall.filter(function(f){
-      f.x+=f.vx;f.y+=f.vy;f.rot+=f.vr;f.a-=.0035;
+      f.x+=f.vx;f.y+=f.vy;f.rot+=f.vr;f.a-=.0032;
       return f.y<h+20&&f.a>0;
     });
     fall.forEach(function(f){
       ctx.save();
       ctx.translate(f.x,f.y);ctx.rotate(f.rot);
       ctx.globalAlpha=Math.max(0,f.a);
+      var s=f.s;
       ctx.beginPath();
-      ctx.moveTo(0,-f.s*1.2);
-      ctx.quadraticCurveTo(f.s*.75,-f.s*.4,f.s*.62,f.s*.9);
-      ctx.quadraticCurveTo(0,f.s*.55,-f.s*.5,f.s*.95);
-      ctx.quadraticCurveTo(-f.s*.62,-f.s*.2,0,-f.s*1.2);
+      ctx.moveTo(0,-s*1.2);
+      ctx.quadraticCurveTo(s*.75,-s*.4,s*.62,s*.9);
+      ctx.quadraticCurveTo(0,s*.55,-s*.5,s*.95);
+      ctx.quadraticCurveTo(-s*.62,-s*.2,0,-s*1.2);
       ctx.closePath();
-      ctx.fillStyle='#e03048';
-      ctx.shadowColor='rgba(255,51,72,.8)';ctx.shadowBlur=8;
+      ctx.fillStyle='#e63852';
+      ctx.shadowColor='rgba(255,51,72,.9)';ctx.shadowBlur=10;
       ctx.fill();
       ctx.restore();
     });
     ctx.globalAlpha=1;
   }
-  // 种子光点（0-0.7s）
   function drawSeed(ts){
     var b=.5+Math.sin(ts*4)*.4;
     ctx.beginPath();
-    ctx.arc(BX,BY-6,2.4+b,0,7);
-    ctx.fillStyle='rgba(255,60,80,'+(.4+b*.5)+')';
-    ctx.shadowColor='rgba(255,51,72,.9)';ctx.shadowBlur=12;
+    ctx.arc(BX,BY-8*S,3*S+b*S,0,7);
+    ctx.fillStyle='rgba(255,60,80,'+(.45+b*.5)+')';
+    ctx.shadowColor='rgba(255,51,72,.95)';ctx.shadowBlur=16;
     ctx.fill();
   }
-  // 静止终态（reduced-motion）
   function snap(ts){
     var sway=Math.sin(ts*.45)*.05;
-    drawStalk(1,sway);drawLeaves(1,sway);drawStamens(1,sway);drawBloom(1,sway);
+    drawAura(sway);drawStalk(1,sway);drawLeaves(1,sway);drawStamens(1,sway);drawBloom(1,sway);
   }
   function tick(now){
-    var ts=(now-T0)/1000, sway=Math.sin(ts*.45)*.055+Math.sin(ts*.13+2)*.018;
+    var ts=(now-T0)/1000;
+    var sway=Math.sin(ts*.45)*.06+Math.sin(ts*.13+2)*.02;
+    lastSway=sway;
     ctx.clearRect(0,0,w,h);
     pts.forEach(function(p){
       p.x+=p.vx;p.y+=p.vy;
       if(p.x<-5)p.x=w+5;if(p.x>w+5)p.x=-5;if(p.y<-5)p.y=h+5;if(p.y>h+5)p.y=-5;
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle='rgba('+p.c+','+p.a+')';ctx.fill();
     });
+    if(ts>=1.2)drawAura(sway);                    // 光晕先亮
     if(ts<0.7)drawSeed(ts);
     if(ts>=0.5)drawStalk(clampX((ts-.5)/2.9,0,1),sway);
     if(ts>=1.6)drawLeaves(clampX((ts-1.6)/1.3,0,1),sway);
     if(ts>=2.6)drawStamens(clampX((ts-2.6)/1.0,0,1),sway);
-    if(ts>=2.8)drawBloom(clampX((ts-2.8)/2.2,0,1),sway);
-    if(ts>=4.6&&ts-lastFall>.55){lastFall=ts;spawnFall(2);}
+    if(ts>=2.8)drawBloom(clampX((ts-2.8)/2.4,0,1),sway);
+    if(ts>=4.6&&ts-lastFall>.45){lastFall=ts;spawnFall(2);}
     drawFallPetals();
     requestAnimationFrame(tick);
   }
-  // 点击花头：洒一波花瓣
-  cv.addEventListener('click',function(e){
-    var dx=e.clientX-BX,dy=e.clientY-BY+STALK_LEN*.4;
-    if(dx*dx+dy*dy<160*160)spawnFall(10);
+  // 点击花头区域洒花瓣（canvas 是 pointer-events:none，用 window 坐标判断）
+  window.addEventListener('click',function(e){
+    var yy=BY-STALK_LEN+Math.sin(lastSway)*STALK_LEN*.1;
+    var dx=e.clientX-BX,dy=e.clientY-yy;
+    if(dx*dx+dy*dy<(STALK_LEN*.42)*(STALK_LEN*.42))spawnFall(12);
   });
   if(reduced){ctx.clearRect(0,0,w,h);snap(performance.now()/1000);}
   else requestAnimationFrame(tick);
