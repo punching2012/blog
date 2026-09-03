@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投资笔记 · 资产配置方法与工具</title>
+<meta name="description" content="个人投资笔记：三段论框架、数据验证、哑铃配置看板与执行工具。非投资建议。">
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --border:#e2e8f0; --ink:#1e293b; --ink2:#475569; --muted:#94a3b8;
+    --chip:#f1f5f9; --red:#dc2626; --blue:#3b82f6; --shadow:0 1px 2px rgba(15,23,42,.05),0 4px 16px rgba(15,23,42,.06);
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#0f172a; --card:#16213a; --border:#263450; --ink:#e2e8f0; --ink2:#a7b4c9; --muted:#64748b; --chip:#1c2946; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35); }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:15.5px/1.7 -apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  header{padding:64px 0 30px}
+  h1{font-size:30px;font-weight:800;letter-spacing:.5px}
+  h1 span{color:var(--red)}
+  .sub{color:var(--ink2);margin-top:10px;max-width:600px}
+  .meta{color:var(--muted);font-size:13px;margin-top:8px}
+  .list{margin-top:8px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow);display:block;text-decoration:none;color:inherit;transition:transform .15s,border-color .15s}
+  .card:hover{transform:translateY(-2px);border-color:var(--ink2)}
+  .card h2{font-size:19px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .card .d{color:var(--muted);font-size:12.5px;margin:6px 0 8px}
+  .card p{color:var(--ink2);font-size:14px}
+  .tags{margin-top:10px}
+  .tags span{display:inline-block;font-size:12px;color:var(--ink2);background:var(--chip);border:1px solid var(--border);border-radius:999px;padding:2px 10px;margin-right:6px}
+  .about{margin-top:26px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;box-shadow:var(--shadow);font-size:13.5px;color:var(--ink2)}
+  .about b{color:var(--ink)}
+  footer{padding:40px 0 60px;color:var(--muted);font-size:12.5px;line-height:1.9}
+  a{color:var(--blue)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>投资笔记<span>·</span></h1>
+    <p class="sub">一套讲"钱是谁的"的配置框架：三段论 → 两轴一禁（资金流结构 × 位置 + 禁绝价值幻想）。所有结论附 1 年 / 3 年 / 5 年数据验证，工具全部可交互。</p>
+    <p class="meta">个人策略笔记 · 非投资建议 · 数据以交易所公告为准</p>
+  </header>
+
+  <div class="list">
+    <a class="card" href="posts/barbell-playbook.html">
+      <h2>📊 哑铃执行看板 · 三段论操作手册</h2>
+      <div class="d">发布于 2026-09-03 · 静态工具页（自包含，可交互）</div>
+      <p>从"一份资金该赚谁的钱"出发：三类资产对号入座 → 现状/目标/理想三档配比（含增量资金切分与修正操作清单）→ 13 项可输入的位置仪表（输入今日值自动判态）→ 信号触发表与执行时间轴 → 每日 1 分钟自查与 AI 论证提示词。含 1y/3y/5y 三窗口实证：黄金 +143%/+127%/+27%、美股 +70%/+70%/+20%、白酒 -58%/-57%/-37%。</p>
+      <div class="tags"><span>策略框架</span><span>数据验证</span><span>配置看板</span><span>可交互</span></div>
+    </a>
+  </div>
+
+  <div class="about">
+    <b>框架速览：</b>① 短线交易（赚博弈的钱）——只配 5% 仓、次日走、不格局；② 价值投资（个人玩不了）——禁条，任何"我觉得值这个价"必须重新归类；③ 大资金保值（赚配置的钱）——美股指数（世界版）、老登精选（中国版）、黄金（第三支柱），三者 1y/3y/5y 全正。权重由<b>资金流结构</b>决定，节奏由<b>位置仪表</b>决定。
+  </div>
+
+  <footer>
+    <b>免责声明</b>：本站所有内容为个人策略研究笔记，不构成任何投资建议；观点可能错误、数据可能滞后；示例持仓与金额均为演示数据；市场有风险，决策需独立判断。<br>
+    © 2026 投资笔记 · 部署于 GitHub Pages
+  </footer>
+</div>
+</body>
+</html>
