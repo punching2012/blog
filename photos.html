@@ -5,39 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>相册 · 手记</title>
 <style>
-  :root{ --bg:#f6f7f9; --card:#fff; --border:#e2e8f0; --ink:#1e293b; --ink2:#475569; --muted:#94a3b8; --chip:#f1f5f9; --shadow:0 1px 2px rgba(15,23,42,.05),0 4px 16px rgba(15,23,42,.06); }
-  @media (prefers-color-scheme:dark){ :root{ --bg:#0f172a; --card:#16213a; --border:#263450; --ink:#e2e8f0; --ink2:#a7b4c9; --muted:#64748b; --chip:#1c2946; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);} }
+  :root{
+    --bg:#080b13; --panel:rgba(17,24,39,.72); --line:rgba(148,163,184,.16); --line2:rgba(148,163,184,.32);
+    --ink:#e5ecf5; --ink2:#96a3b8; --muted:#5b6a80; --cy:#22d3ee; --vi:#a78bfa; --tl:#2dd4bf;
+    --glow:0 0 22px rgba(34,211,238,.2); --shadow:0 10px 40px rgba(0,0,0,.5);
+    --mono:ui-monospace,"JetBrains Mono","Cascadia Code",Consolas,monospace;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);font:15.5px/1.7 -apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
-  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
-  .top{display:flex;justify-content:space-between;align-items:center;padding:26px 0 6px;font-size:13px;color:var(--muted)}
+  .gridbg{position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 75%)}
+  .wrap{position:relative;max-width:1000px;margin:0 auto;padding:0 22px 70px}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:24px 0 6px;font-size:13px;font-family:var(--mono)}
   .top a{color:var(--muted);text-decoration:none}
-  .top a:hover{color:var(--ink2)}
-  h1{font-size:26px;font-weight:800;padding:14px 0 4px}
-  .d{color:var(--muted);font-size:13px;margin-bottom:22px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-  .slot{aspect-ratio:4/3;border:1.5px dashed var(--border);border-radius:12px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-size:13px;gap:4px;box-shadow:var(--shadow)}
-  .slot b{font-weight:600}
-  .note{margin-top:20px;color:var(--muted);font-size:12.5px;line-height:1.9}
-  /* 上传规则（给管理者/ChatGPT 看）：把图片放进 photos/xxx.jpg，并把下面这一行加入 .grid：
-     <figure class="cap"><img src="../photos/xxx.jpg" alt="说明"><figcaption>说明文字</figcaption></figure>
-     配套 CSS：.cap img{width:100%;border-radius:12px;display:block;box-shadow:var(--shadow)} .cap figcaption{font-size:12px;color:var(--muted);margin-top:6px} .cap{list-style:none} */
+  .top a:hover{color:var(--cy)}
+  .top .s{color:var(--tl)}
+  h1{font-size:30px;font-weight:900;padding:16px 0 4px;letter-spacing:3px;background:linear-gradient(92deg,#fff 20%,var(--cy) 60%,var(--vi));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .d{color:var(--muted);font-size:12.5px;font-family:var(--mono);margin-bottom:24px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+  .slot{aspect-ratio:4/3;border:1.5px dashed var(--line);border-radius:16px;background:var(--panel);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-size:12.5px;gap:5px;font-family:var(--mono)}
+  .slot b{color:var(--line2);font-weight:600}
+  .slot:nth-child(3n):hover,.slot:hover{border-color:var(--cy);box-shadow:var(--glow)}
+  .note{margin-top:22px;color:var(--muted);font-size:12.5px;line-height:2;font-family:var(--mono)}
+  .note b{color:var(--cy)}
 </style>
 </head>
 <body>
+<div class="gridbg"></div>
 <div class="wrap">
-  <div class="top"><a href="index.html">‹ 返回首页</a><span>手记</span></div>
+  <div class="top"><a href="index.html">‹ cd ..</a><span class="s">● gallery</span></div>
   <h1>相册</h1>
-  <div class="d">2026-09-03 建 · 图片存档。目前还是空墙。</div>
+  <div class="d">2026-09-03 built · 图片存档 · 目前还是空墙</div>
   <div class="grid">
-    <div class="slot"><b>待上传</b>照片上架位 01</div>
-    <div class="slot"><b>待上传</b>照片上架位 02</div>
-    <div class="slot"><b>待上传</b>照片上架位 03</div>
-    <div class="slot"><b>待上传</b>照片上架位 04</div>
-    <div class="slot"><b>待上传</b>照片上架位 05</div>
-    <div class="slot"><b>待上传</b>照片上架位 06</div>
+    <div class="slot"><b>▦ 待上传</b>slot 01</div>
+    <div class="slot"><b>▦ 待上传</b>slot 02</div>
+    <div class="slot"><b>▦ 待上传</b>slot 03</div>
+    <div class="slot"><b>▦ 待上传</b>slot 04</div>
+    <div class="slot"><b>▦ 待上传</b>slot 05</div>
+    <div class="slot"><b>▦ 待上传</b>slot 06</div>
   </div>
-  <p class="note">照片会按"时间 × 地点 × 一句话"的方式存放：不追求整齐，只追求再看时能想起当时为什么按下快门。图片文件放 <b>photos/</b> 目录（见页面源码注释中的规则），压缩至 1MB 以内。</p>
+  <p class="note"># 上传规则：图片 ≤1MB 放 <b>photos/</b>，在 .grid 里加一行 &lt;figure&gt; 即可（见源码注释）。<br># 照片按"时间 × 地点 × 一句话"存放：不追求整齐，只追求再看时能想起当时为什么按下快门。</p>
 </div>
 </body>
 </html>
