@@ -46,7 +46,9 @@
   /* 题字（垂直居中） */
   header{flex:1;display:flex;flex-direction:column;justify-content:center;padding:6vh 0}
   h1{font-size:clamp(42px,9vw,78px);font-weight:900;letter-spacing:12px;line-height:1.1;color:var(--ink);user-select:none}
-  .sub{margin-top:20px;color:var(--ink2);font-size:15px;letter-spacing:2px}
+  .sub{margin-top:20px;color:var(--ink2);font-size:15px;letter-spacing:2px;display:inline-block;cursor:default;will-change:transform}
+  .sub.jelly{animation:jelly .7s cubic-bezier(.36,.07,.19,.97)}
+  @keyframes jelly{0%{transform:scale(1,1)}22%{transform:scale(1.09,.9)}42%{transform:scale(.94,1.06)}62%{transform:scale(1.05,.95)}82%{transform:scale(.985,1.015)}100%{transform:scale(1,1)}}
   .typed{margin-top:32px;min-height:1.9em;color:var(--muted);font-size:14px;letter-spacing:4px;font-family:var(--mono)}
   .typed .caret{display:inline-block;width:.5em;height:1.05em;margin-left:2px;background:var(--red);vertical-align:-.15em;animation:blink 1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
@@ -164,6 +166,15 @@
     if(!del){ci++;if(ci>line.length){del=true;setTimeout(type,3600);return;}setTimeout(type,150);}
     else{if(ci>0){ci--;setTimeout(type,55);}else{del=false;setTimeout(type,900);}}
   })();
+
+  // 副题果冻抖动（悬停触发，弹性衰减；可连续抖）
+  var subEl=document.querySelector(".sub");
+  subEl.addEventListener("mouseenter",function(){
+    subEl.classList.remove("jelly");
+    void subEl.offsetWidth;
+    subEl.classList.add("jelly");
+  });
+  subEl.addEventListener("animationend",function(){subEl.classList.remove("jelly");});
 
   // 心跳区（原样）
   document.getElementById('zone').addEventListener('click',function(){this.classList.add('revealed');});
