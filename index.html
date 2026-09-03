@@ -45,8 +45,7 @@
   .zone.revealed .hk:hover{color:var(--red2);text-shadow:0 0 18px rgba(230,69,69,.55)}
   /* 题字（垂直居中） */
   header{flex:1;display:flex;flex-direction:column;justify-content:center;padding:6vh 0}
-  h1{font-size:clamp(42px,9vw,78px);font-weight:900;letter-spacing:12px;line-height:1.1;color:var(--ink);transition:letter-spacing .6s,text-shadow .8s;user-select:none}
-  h1:hover{letter-spacing:17px;text-shadow:0 0 44px rgba(255,255,255,.5)}
+  h1{font-size:clamp(42px,9vw,78px);font-weight:900;letter-spacing:12px;line-height:1.1;color:var(--ink);user-select:none}
   .sub{margin-top:20px;color:var(--ink2);font-size:15px;letter-spacing:2px}
   .typed{margin-top:32px;min-height:1.9em;color:var(--muted);font-size:14px;letter-spacing:4px;font-family:var(--mono)}
   .typed .caret{display:inline-block;width:.5em;height:1.05em;margin-left:2px;background:var(--red);vertical-align:-.15em;animation:blink 1s steps(1) infinite}
@@ -100,19 +99,19 @@
   sg.addColorStop(1,'rgba(255,255,255,0)');
   sc.fillStyle=sg;sc.fillRect(0,0,32,32);
 
-  var pts=[],rings=[],clicked=[],clickedP=[],converging=false,glowN=0,mx=-999,my=-999,moving=false,lastTrail=0,scan={x:-400,next:0};
+  var pts=[],rings=[],clicked=[],clickedP=[],converging=false,glowN=0;
   function rs(){w=cv.width=innerWidth;h=cv.height=innerHeight;}
   rs();addEventListener('resize',rs);
 
-  // 光粒统一外观：小、暗、光韵 —— 初始与点击完全一致
+  // 光粒统一外观（初始 = 点击）
   function mk(x,y){
     return {x:x,y:y,r:Math.random()*.9+.4,
       vx:(Math.random()-.5)*.26,vy:(Math.random()-.5)*.2,
-      a:Math.random()*.3+.07,h:4.5,f:0};
+      a:Math.random()*.3+.07,h:4.5};
   }
   var i;for(i=0;i<92;i++)pts.push(mk(Math.random()*innerWidth,Math.random()*innerHeight));
 
-  // h1 文字紧致包围盒（灵的"灵台"二字本身）
+  // "灵台"二字紧致包围盒
   function textRect(){
     var r=document.createRange();r.selectNodeContents(h1el);
     var rc=r.getBoundingClientRect();
@@ -120,30 +119,8 @@
     return rc;
   }
 
-  function tick(now){
+  function tick(){
     ctx.clearRect(0,0,w,h);
-    // 鼠标拖尾（移动时落微光，会消散）
-    if(!reduced&&moving){
-      var lp=pts.length;
-      if(now-lastTrail>90){
-        lastTrail=now;
-        var t=mk(mx,my);t.a=.22;t.f=.008;t.vx=0;t.vy=0;
-        pts.push(t);
-      }
-      if(pts.length>230)pts.splice(0,pts.length-230);
-    }
-    pts=pts.filter(function(p){
-      if(p.f){p.a-=p.f;if(p.a<=0)return false;}
-      // 光标轻推（100px 内缓推离，速率低）
-      if(!reduced){
-        var dx=p.x-mx,dy=p.y-my,d2=dx*dx+dy*dy;
-        if(d2<10000&&d2>.01){
-          var d=Math.sqrt(d2),k=(1-d/100)*.9;
-          p.x+=dx/d*k;p.y+=dy/d*k;
-        }
-      }
-      return true;
-    });
     pts.forEach(function(p){
       p.x+=p.vx;p.y+=p.vy;
       if(p.x<-6)p.x=w+6;if(p.x>w+6)p.x=-6;if(p.y<-6)p.y=h+6;if(p.y>h+6)p.y=-6;
@@ -152,7 +129,7 @@
       ctx.drawImage(spr,p.x-hr,p.y-hr,hr*2,hr*2);
     });
     ctx.globalAlpha=1;
-    // 聚拢：每粒飞向"灵台"文字区域内的随机点
+    // 聚拢：十粒飞向"灵台"文字区域内的随机点 → 到达消失
     if(converging){
       for(var k=clicked.length-1;k>=0;k--){
         var p=clicked[k];
@@ -174,27 +151,12 @@
       ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,7);
       ctx.strokeStyle='rgba(255,255,255,'+Math.max(0,r.a)+')';ctx.lineWidth=1;ctx.stroke();
     });
-    drawScan(now,true);
     requestAnimationFrame(tick);
   }
-  // 扫描光带：每 12 秒一道极淡白光划过
-  function drawScan(t,after){
-    if(t<scan.next&&!after)return;
-    if(scan.x>-420&&scan.x<w+420){
-      var g=ctx.createLinearGradient(scan.x-170,0,scan.x+170,0);
-      g.addColorStop(0,'rgba(255,255,255,0)');
-      g.addColorStop(.5,'rgba(255,255,255,.045)');
-      g.addColorStop(1,'rgba(255,255,255,0)');
-      ctx.fillStyle=g;ctx.fillRect(scan.x-170,0,340,h);
-      scan.x+=3.4;
-    }else if(t>=scan.next){
-      scan.x=-400;scan.next=t+12000;
-    }
-  }
 
-  var tx=0,ty=0,h1el=document.querySelector('h1');
+  var h1el=document.querySelector('h1');
 
-  // 打字机（点击题字行可重打）
+  // 打字机（原样）
   var line='六根常清净，非是有心猿。';
   var el=document.getElementById('typedTxt'),ci=0,del=false;
   (function type(){
@@ -202,18 +164,11 @@
     if(!del){ci++;if(ci>line.length){del=true;setTimeout(type,3600);return;}setTimeout(type,150);}
     else{if(ci>0){ci--;setTimeout(type,55);}else{del=false;setTimeout(type,900);}}
   })();
-  document.querySelector('.typed').addEventListener('click',function(){if(!del){ci=0;del=false;}});
 
-  // 心跳区
+  // 心跳区（原样）
   document.getElementById('zone').addEventListener('click',function(){this.classList.add('revealed');});
 
-  // 鼠标轨迹
-  addEventListener('mousemove',function(e){
-    var d2=(e.clientX-mx)*(e.clientX-mx)+(e.clientY-my)*(e.clientY-my);
-    moving=d2>9||mx<-900; mx=e.clientX;my=e.clientY;
-  });
-
-  // 点击：光粒(与初始同款)+涟漪；满10粒聚拢点亮
+  // 点击：光粒(同款) + 涟漪；满10粒 → 聚拢点亮（主线，不再修改）
   window.addEventListener('click',function(e){
     if(e.target.closest('a,button'))return;
     var np=mk(e.clientX,e.clientY);
@@ -232,6 +187,6 @@
     ctx.globalAlpha=1;
   } else requestAnimationFrame(tick);
 })();
-</script>>>
+</script>>>>
 </body>
 </html>
