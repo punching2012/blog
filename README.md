@@ -1,13 +1,14 @@
-# 手记 · 个人站点
+# 灵台 · 个人站点
 
-> 日常 · 投资 · 技能 · 照片 · 连载（角落入口）。GitHub Pages 部署。
+> 行脚(日常) · 灵蕴(投资) · 神通(技能) · 影神(相册) · 心猿(连载角落)。GitHub Pages 部署。
 > 站点首页：https://punching2012.github.io/blog/
 
 ## 目录结构
 
 ```
-index.html                     # 首页（栏目筛选：全部/日常/投资/技能/相册）
-photos.html                    # 相册页（占位；图片放 photos/，规则见源码注释）
+index.html                     # 首页（极简：山门菜单 + 题字，无内容列表）
+posts/index.html               # 见闻录（全部文章列表 + 栏目筛选）
+photos.html                    # 影神图（占位；图片放 photos/，规则见源码注释）
 daily-ops.md                   # 每日执行文档（AI 唯一入口：阈值总表+输出契约）
 daily-log.md                   # 每日执行日志（本地，.gitignore 排除，永不发布）
 README.md                      # 本文件
