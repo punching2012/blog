@@ -30,12 +30,13 @@
   /* 山门 */
   nav{flex:none;display:flex;align-items:center;gap:4px;padding:24px 0 14px;font-family:var(--mono);border-bottom:1px solid var(--line)}
   .logo{display:inline-flex;align-items:baseline;font-size:20px;font-weight:900;letter-spacing:5px;color:var(--ink);text-decoration:none;line-height:1}
-  .logo i{font-style:normal;color:var(--red);font-size:14px;margin:0 2px}
-  /* 灵台·斜月 —— 楷体/灰色，与"灵台"(无衬线/纯白)同基线同字号 */
-  .logo em{font-family:var(--kai);font-style:normal;font-weight:400;font-size:20px;letter-spacing:3px;color:#8b8b92}
+  .logo i{font-style:normal;color:#fff;font-size:14px;margin:0 2px}
+  /* 灵台·斜月 —— 点白、斜月朱红，'斜'字微倾；与"灵台"(无衬线/纯白)同基线同字号 */
+  .logo em{font-family:var(--kai);font-style:normal;font-weight:400;font-size:20px;letter-spacing:3px;color:var(--red)}
+  .logo em .xie{display:inline-block;transform:rotate(10deg)}
   nav .sp{flex:1}
   nav a.lk{color:var(--ink2);text-decoration:none;font-size:13px;padding:5px 13px;border-radius:999px;border:1px solid transparent;letter-spacing:2px;transition:.2s}
-  nav a.lk:hover{color:var(--ink);border-color:var(--line2)}
+  nav a.lk:hover{color:var(--red2);border-color:var(--red)}
   /* 心跳区：空白点击同一区域 → 心猿浮出 */
   .zone{width:112px;height:38px;border:1px solid transparent;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:default;transition:.3s}
   .zone:hover{background:rgba(255,255,255,.04);border-color:var(--line)}
@@ -84,7 +85,7 @@
 
 <div class="wrap">
   <nav id="nav">
-    <a class="logo" href="index.html">灵台<i>·</i><em>斜月</em></a>
+    <a class="logo" href="index.html">灵台<i>·</i><em><span class="xie">斜</span>月</em></a>
     <span class="sp"></span>
     <span class="zone" id="zone" title=""><a class="hk" href="posts/novel/">· 心猿 ·</a></span>
     <a class="lk" href="posts/">手扎</a>
@@ -216,8 +217,13 @@
     })();
   }
 
-  // 心跳区（原样）
-  document.getElementById('zone').addEventListener('click',function(){this.classList.add('revealed');});
+  // 心跳区（原样）：点击浮现心猿；3s 未点击则再隐去
+  var hzTimer=null;
+  document.getElementById('zone').addEventListener('click',function(){
+    this.classList.add('revealed');
+    clearTimeout(hzTimer);
+    hzTimer=setTimeout(function(){document.getElementById('zone').classList.remove('revealed');},3000);
+  });
 
   // 点击：光粒(同款) + 涟漪；满10粒 → 聚拢点亮（主线，不再修改）
   window.addEventListener('click',function(e){
