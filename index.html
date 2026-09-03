@@ -46,9 +46,8 @@
   /* 题字（垂直居中） */
   header{flex:1;display:flex;flex-direction:column;justify-content:center;padding:6vh 0}
   h1{font-size:clamp(42px,9vw,78px);font-weight:900;letter-spacing:12px;line-height:1.1;color:var(--ink);user-select:none}
-  .sub{margin-top:20px;color:var(--ink2);font-size:15px;letter-spacing:2px;display:inline-block;cursor:default;will-change:transform}
-  .sub.jelly{animation:jelly .7s cubic-bezier(.36,.07,.19,.97)}
-  @keyframes jelly{0%{transform:scale(1,1)}22%{transform:scale(1.09,.9)}42%{transform:scale(.94,1.06)}62%{transform:scale(1.05,.95)}82%{transform:scale(.985,1.015)}100%{transform:scale(1,1)}}
+  .sub{margin-top:20px;color:var(--ink2);font-size:15px;letter-spacing:2px;display:inline-block}
+  .sub .ch{display:inline-block;will-change:transform,opacity}
   .typed{margin-top:32px;min-height:1.9em;color:var(--muted);font-size:14px;letter-spacing:4px;font-family:var(--mono)}
   .typed .caret{display:inline-block;width:.5em;height:1.05em;margin-left:2px;background:var(--red);vertical-align:-.15em;animation:blink 1s steps(1) infinite}
   @keyframes blink{50%{opacity:0}}
@@ -167,14 +166,34 @@
     else{if(ci>0){ci--;setTimeout(type,55);}else{del=false;setTimeout(type,900);}}
   })();
 
-  // 副题果冻抖动（悬停触发，弹性衰减；可连续抖）
-  var subEl=document.querySelector(".sub");
-  subEl.addEventListener("mouseenter",function(){
-    subEl.classList.remove("jelly");
-    void subEl.offsetWidth;
-    subEl.classList.add("jelly");
-  });
-  subEl.addEventListener("animationend",function(){subEl.classList.remove("jelly");});
+  // 副题：逐字无规则乱颤 —— 每字独立引擎（随机方向±3px / 大小±2px / 透明度0.5-1 / 无限循环）
+  if(!reduced){
+    var subEl=document.querySelector(".sub");
+    var chars=subEl.textContent.split("");
+    subEl.textContent="";
+    var CHS=[];
+    chars.forEach(function(c){
+      if(c===" "){subEl.appendChild(document.createTextNode(" "));return;}
+      var sp=document.createElement("span");sp.className="ch";sp.textContent=c;
+      subEl.appendChild(sp);
+      CHS.push({el:sp,x:0,y:0,s:1,tx:0,ty:0,ts:1,next:0,rate:60+Math.random()*100,ph:Math.random()*6.28,sp2:.7+Math.random()*.8});
+    });
+    (function chLoop(){
+      var t=performance.now();
+      CHS.forEach(function(c){
+        if(t>=c.next){                              // 随机换目标位：任意方向 ±3px、大小 ±2px(15px基准→scale±.133)
+          c.next=t+c.rate;c.rate=60+Math.random()*100;
+          c.tx=(Math.random()*2-1)*3;c.ty=(Math.random()*2-1)*3;
+          c.ts=1+(Math.random()*2-1)*(2/15);
+        }
+        c.x+=(c.tx-c.x)*.38;c.y+=(c.ty-c.y)*.38;c.s+=(c.ts-c.s)*.38;
+        var o=.75+.25*Math.sin(t/1000*c.sp2+c.ph);  // 透明度 .5~1 正弦
+        c.el.style.transform="translate("+c.x.toFixed(2)+"px,"+c.y.toFixed(2)+"px) scale("+c.s.toFixed(3)+")";
+        c.el.style.opacity=o.toFixed(2);
+      });
+      requestAnimationFrame(chLoop);
+    })();
+  }
 
   // 心跳区（原样）
   document.getElementById('zone').addEventListener('click',function(){this.classList.add('revealed');});
