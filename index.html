@@ -176,14 +176,14 @@
       if(c===" "){subEl.appendChild(document.createTextNode(" "));return;}
       var sp=document.createElement("span");sp.className="ch";sp.textContent=c;
       subEl.appendChild(sp);
-      CHS.push({el:sp,x:0,y:0,s:1,tx:0,ty:0,ts:1,next:0,rate:60+Math.random()*100,ph:Math.random()*6.28,sp2:.7+Math.random()*.8});
+      CHS.push({el:sp,x:0,y:0,s:1,tx:0,ty:0,ts:1,next:0,rate:300+Math.random()*200,ph:Math.random()*6.28,sp2:.7+Math.random()*.8});
     });
     (function chLoop(){
       var t=performance.now();
       CHS.forEach(function(c){
         if(t>=c.next){                              // 随机换目标位：任意方向 ±3px、大小 ±2px(15px基准→scale±.133)
-          c.next=t+c.rate;c.rate=60+Math.random()*100;
-          c.tx=(Math.random()*2-1)*3;c.ty=(Math.random()*2-1)*3;
+          c.next=t+c.rate;c.rate=300+Math.random()*200;
+          c.tx=(Math.random()*2-1)*2;c.ty=(Math.random()*2-1)*2;
           c.ts=1+(Math.random()*2-1)*(2/15);
         }
         c.x+=(c.tx-c.x)*.38;c.y+=(c.ty-c.y)*.38;c.s+=(c.ts-c.s)*.38;
