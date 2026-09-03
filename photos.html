@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>相册 · 手记</title>
+<style>
+  :root{ --bg:#f6f7f9; --card:#fff; --border:#e2e8f0; --ink:#1e293b; --ink2:#475569; --muted:#94a3b8; --chip:#f1f5f9; --shadow:0 1px 2px rgba(15,23,42,.05),0 4px 16px rgba(15,23,42,.06); }
+  @media (prefers-color-scheme:dark){ :root{ --bg:#0f172a; --card:#16213a; --border:#263450; --ink:#e2e8f0; --ink2:#a7b4c9; --muted:#64748b; --chip:#1c2946; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);} }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:15.5px/1.7 -apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:26px 0 6px;font-size:13px;color:var(--muted)}
+  .top a{color:var(--muted);text-decoration:none}
+  .top a:hover{color:var(--ink2)}
+  h1{font-size:26px;font-weight:800;padding:14px 0 4px}
+  .d{color:var(--muted);font-size:13px;margin-bottom:22px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .slot{aspect-ratio:4/3;border:1.5px dashed var(--border);border-radius:12px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-size:13px;gap:4px;box-shadow:var(--shadow)}
+  .slot b{font-weight:600}
+  .note{margin-top:20px;color:var(--muted);font-size:12.5px;line-height:1.9}
+  /* 上传规则（给管理者/ChatGPT 看）：把图片放进 photos/xxx.jpg，并把下面这一行加入 .grid：
+     <figure class="cap"><img src="../photos/xxx.jpg" alt="说明"><figcaption>说明文字</figcaption></figure>
+     配套 CSS：.cap img{width:100%;border-radius:12px;display:block;box-shadow:var(--shadow)} .cap figcaption{font-size:12px;color:var(--muted);margin-top:6px} .cap{list-style:none} */
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="index.html">‹ 返回首页</a><span>手记</span></div>
+  <h1>相册</h1>
+  <div class="d">2026-09-03 建 · 图片存档。目前还是空墙。</div>
+  <div class="grid">
+    <div class="slot"><b>待上传</b>照片上架位 01</div>
+    <div class="slot"><b>待上传</b>照片上架位 02</div>
+    <div class="slot"><b>待上传</b>照片上架位 03</div>
+    <div class="slot"><b>待上传</b>照片上架位 04</div>
+    <div class="slot"><b>待上传</b>照片上架位 05</div>
+    <div class="slot"><b>待上传</b>照片上架位 06</div>
+  </div>
+  <p class="note">照片会按"时间 × 地点 × 一句话"的方式存放：不追求整齐，只追求再看时能想起当时为什么按下快门。图片文件放 <b>photos/</b> 目录（见页面源码注释中的规则），压缩至 1MB 以内。</p>
+</div>
+</body>
+</html>
