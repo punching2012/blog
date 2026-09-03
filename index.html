@@ -3,63 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>投资笔记 · 资产配置方法与工具</title>
-<meta name="description" content="个人投资笔记：三段论框架、数据验证、哑铃配置看板与执行工具。非投资建议。">
+<title>手记 · 日常、投资、技能与照片</title>
+<meta name="description" content="个人站点：日常记录、投资笔记与工具、技能分享、照片存档。非投资建议。">
 <style>
   :root{
     --bg:#f6f7f9; --card:#fff; --border:#e2e8f0; --ink:#1e293b; --ink2:#475569; --muted:#94a3b8;
-    --chip:#f1f5f9; --red:#dc2626; --blue:#3b82f6; --shadow:0 1px 2px rgba(15,23,42,.05),0 4px 16px rgba(15,23,42,.06);
+    --chip:#f1f5f9; --red:#dc2626; --blue:#3b82f6; --violet:#7c3aed; --teal:#0d9488; --amber:#d97706;
+    --shadow:0 1px 2px rgba(15,23,42,.05),0 4px 16px rgba(15,23,42,.06);
   }
   @media (prefers-color-scheme:dark){
     :root{ --bg:#0f172a; --card:#16213a; --border:#263450; --ink:#e2e8f0; --ink2:#a7b4c9; --muted:#64748b; --chip:#1c2946; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35); }
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);font:15.5px/1.7 -apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
-  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
-  header{padding:64px 0 30px}
-  h1{font-size:30px;font-weight:800;letter-spacing:.5px}
+  .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+  header{padding:56px 0 26px}
+  h1{font-size:30px;font-weight:800;letter-spacing:1px}
   h1 span{color:var(--red)}
-  .sub{color:var(--ink2);margin-top:10px;max-width:600px}
+  .sub{color:var(--ink2);margin-top:8px;max-width:640px}
   .meta{color:var(--muted);font-size:13px;margin-top:8px}
-  .list{margin-top:8px}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow);display:block;text-decoration:none;color:inherit;transition:transform .15s,border-color .15s}
+  /* filters */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 18px}
+  .filters button{background:var(--chip);border:1px solid var(--border);border-radius:999px;padding:6px 16px;font-size:13.5px;color:var(--ink2);cursor:pointer;font-family:inherit}
+  .filters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  /* post cards */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow);display:block;text-decoration:none;color:inherit;margin-bottom:14px;transition:transform .15s,border-color .15s}
   .card:hover{transform:translateY(-2px);border-color:var(--ink2)}
-  .card h2{font-size:19px;font-weight:700;display:flex;align-items:center;gap:10px}
-  .card .d{color:var(--muted);font-size:12.5px;margin:6px 0 8px}
+  .card h2{font-size:18.5px;font-weight:700;display:flex;align-items:center;gap:9px}
+  .card .d{color:var(--muted);font-size:12.5px;margin:5px 0 7px}
   .card p{color:var(--ink2);font-size:14px}
-  .tags{margin-top:10px}
-  .tags span{display:inline-block;font-size:12px;color:var(--ink2);background:var(--chip);border:1px solid var(--border);border-radius:999px;padding:2px 10px;margin-right:6px}
-  .about{margin-top:26px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;box-shadow:var(--shadow);font-size:13.5px;color:var(--ink2)}
+  .tags{margin-top:9px}
+  .tags span{display:inline-block;font-size:11.5px;color:var(--ink2);background:var(--chip);border:1px solid var(--border);border-radius:999px;padding:2px 10px;margin-right:6px}
+  .c-cat{font-size:11px;font-weight:700;border-radius:6px;padding:2px 8px;flex:none}
+  .c-日常{background:color-mix(in srgb,var(--blue) 12%,var(--card));color:var(--blue)}
+  .c-投资{background:color-mix(in srgb,var(--amber) 14%,var(--card));color:var(--amber)}
+  .c-技能{background:color-mix(in srgb,var(--violet) 12%,var(--card));color:var(--violet)}
+  .c-相册{background:color-mix(in srgb,var(--teal) 12%,var(--card));color:var(--teal)}
+  .empty{margin:26px 0;color:var(--muted);font-size:13.5px}
+  /* about */
+  .about{margin-top:22px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 22px;box-shadow:var(--shadow);font-size:13.5px;color:var(--ink2)}
   .about b{color:var(--ink)}
-  footer{padding:40px 0 60px;color:var(--muted);font-size:12.5px;line-height:1.9}
-  a{color:var(--blue)}
+  footer{padding:34px 0 50px;color:var(--muted);font-size:12.5px;line-height:2}
+  footer a{color:var(--muted)}
+  .novel{font-size:12px;opacity:.55;letter-spacing:2px}
+  .novel:hover{opacity:1}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <h1>投资笔记<span>·</span></h1>
-    <p class="sub">一套讲"钱是谁的"的配置框架：三段论 → 两轴一禁（资金流结构 × 位置 + 禁绝价值幻想）。所有结论附 1 年 / 3 年 / 5 年数据验证，工具全部可交互。</p>
-    <p class="meta">个人策略笔记 · 非投资建议 · 数据以交易所公告为准</p>
+    <h1>手记<span>。</span></h1>
+    <p class="sub">一个人的数字谷仓：日常记录 · 投资笔记与工具 · 技能分享 · 照片存档。写给自己，也写给想看的你。</p>
+    <p class="meta">搭建于 2026-09-03 · GitHub Pages 托管 · 内容除标注外均为原创</p>
   </header>
 
-  <div class="list">
-    <a class="card" href="posts/barbell-playbook.html">
-      <h2>📊 哑铃执行看板 · 三段论操作手册</h2>
-      <div class="d">发布于 2026-09-03 · 静态工具页（自包含，可交互）</div>
-      <p>从"一份资金该赚谁的钱"出发：三类资产对号入座 → 现状/目标/理想三档配比（含增量资金切分与修正操作清单）→ 13 项可输入的位置仪表（输入今日值自动判态）→ 信号触发表与执行时间轴 → 每日 1 分钟自查与 AI 论证提示词。含 1y/3y/5y 三窗口实证：黄金 +143%/+127%/+27%、美股 +70%/+70%/+20%、白酒 -58%/-57%/-37%。</p>
-      <div class="tags"><span>策略框架</span><span>数据验证</span><span>配置看板</span><span>可交互</span></div>
-    </a>
+  <div class="filters" id="filters">
+    <button data-c="全部" class="on">全部</button>
+    <button data-c="日常">日常</button>
+    <button data-c="投资">投资</button>
+    <button data-c="技能">技能</button>
+    <button data-c="相册">相册</button>
   </div>
 
+  <div id="list"></div>
+  <div class="empty" id="empty" hidden>这个栏目还没有内容——先留白，等想写的那天。</div>
+
   <div class="about">
-    <b>框架速览：</b>① 短线交易（赚博弈的钱）——只配 5% 仓、次日走、不格局；② 价值投资（个人玩不了）——禁条，任何"我觉得值这个价"必须重新归类；③ 大资金保值（赚配置的钱）——美股指数（世界版）、老登精选（中国版）、黄金（第三支柱），三者 1y/3y/5y 全正。权重由<b>资金流结构</b>决定，节奏由<b>位置仪表</b>决定。
+    <b>关于本站</b>：记录不是为了被看见，是为了不忘记。投资板块的结论都附 1/3/5 年数据验证与可视化工具；日常与技能随缘更新；<b>这里不构成任何投资建议</b>。
   </div>
 
   <footer>
-    <b>免责声明</b>：本站所有内容为个人策略研究笔记，不构成任何投资建议；观点可能错误、数据可能滞后；示例持仓与金额均为演示数据；市场有风险，决策需独立判断。<br>
-    © 2026 投资笔记 · 部署于 GitHub Pages
+    <div>© 2026 手记 · 部署于 GitHub Pages · <a href="daily-ops.md">每日执行文档</a> · <a href="README.md">维护说明</a></div>
+    <div class="novel"><a href="posts/novel/">· 载有未完成之事的角落 ·</a></div>
   </footer>
 </div>
+
+<script>
+// 新增内容：在下面 POSTS 里加一行即可；photo/skill 用 c:'相册'/'技能' 归类
+var POSTS=[
+  {t:'哑铃执行看板 · 三段论操作手册', d:'2026-09-03', c:'投资', h:'posts/barbell-playbook.html',
+   x:'从"一份资金该赚谁的钱"出发的三段论框架：三类资产对号入座 → 现状/目标/理想三档配比（含增量切分与修正操作）→ 13 项可输入的位置仪表（输入今日值自动判态）→ 信号触发表、执行时间轴、每日自查与 AI 论证提示词。含 1y/3y/5y 三窗口实证。',
+   tags:['策略框架','数据验证','可交互工具']},
+  {t:'开站记：为什么是"手记"', d:'2026-09-03', c:'日常', h:'posts/daily/2026-09-03-hello.html',
+   x:'建站第一天。定下三条规矩：写给自己优先、结论附数据、公开版不含任何个人真实信息。',
+   tags:['手记']},
+  {t:'相册 · 图片存档', d:'2026-09-03', c:'相册', h:'photos.html',
+   x:'照片上架位。等第一批图进来，这里会变成一堵安静的墙。',
+   tags:['照片','存档']},
+];
+
+var list=document.getElementById('list'), empty=document.getElementById('empty');
+function render(cat){
+  var items=POSTS.filter(function(p){ return cat==='全部'||p.c===cat; });
+  empty.hidden = items.length>0;
+  list.innerHTML = items.map(function(p){
+    return '<a class="card" href="'+p.h+'">'
+      +'<h2><span class="c-cat c-'+p.c+'">'+p.c+'</span>'+p.t+'</h2>'
+      +'<div class="d">'+p.d+'</div>'
+      +'<p>'+p.x+'</p>'
+      +'<div class="tags">'+p.tags.map(function(t){return '<span>'+t+'</span>';}).join('')+'</div>'
+      +'</a>';
+  }).join('');
+}
+render('全部');
+document.getElementById('filters').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#filters button').forEach(function(x){x.classList.toggle('on',x===b);});
+  render(b.dataset.c);
+});
+</script>
 </body>
 </html>
