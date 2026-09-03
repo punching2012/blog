@@ -7,7 +7,7 @@
 
 ```
 index.html                     # 首页（极简：山门菜单 + 题字，无内容列表）
-posts/index.html               # 见闻录（全部文章列表 + 栏目筛选）
+posts/index.html               # 手扎（全部文章列表 + 栏目筛选）
 photos.html                    # 影神图（占位；图片放 photos/，规则见源码注释）
 daily-ops.md                   # 每日执行文档（AI 唯一入口：阈值总表+输出契约）
 daily-log.md                   # 每日执行日志（本地，.gitignore 排除，永不发布）
