@@ -162,40 +162,42 @@
 </div>
 
 <script>
-// ———— 曼陀沙华 · 全幅背景版（生长 × 绽放 × 落瓣，零依赖）————
+// ———— 曼陀沙华 · 全幅背景版 v4（性能优化 + 提亮 + 防冻）————
 (function(){
   var cv=document.getElementById('fbg'),ctx=cv.getContext('2d'),w,h;
   if(!ctx)return;
   var reduced=matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var T0=performance.now();
-  var pts=[],fall=[],lastFall=0;
+  var pts=[],fall=[],lastFall=0,lastSway=0;
   var BX,BY,S,STALK_LEN,P1x,P1y,PETS=64,STAM=9;
   function rs(){
     w=cv.width=innerWidth;h=cv.height=innerHeight;
     BX=w*0.5; BY=h+14;
-    S=Math.max(.7,Math.min(1.7,Math.min(w,h*1.15)/820));   // 随屏等比放大
-    STALK_LEN=Math.min(h*0.68,520*S);                      // 花茎贯穿整个背景
+    S=Math.max(.65,Math.min(1.6,Math.min(w,h*1.15)/860));
+    STALK_LEN=Math.min(h*0.68,520*S*1.05);
     P1x=BX+w*0.012; P1y=BY-STALK_LEN*0.52;
   }
   rs();addEventListener('resize',rs);
   var cols=['34,211,238','167,139,250','94,234,212'];
-  for(var i=0;i<40;i++)pts.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.8+.4,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,c:cols[i%3],a:Math.random()*.5+.15});
+  for(var i=0;i<30;i++)pts.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.8+.4,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,c:cols[i%3],a:Math.random()*.5+.15});
 
   function qb(a,b,c,t){var u=1-t;return {x:u*u*a.x+2*u*t*b.x+t*t*c.x,y:u*u*a.y+2*u*t*b.y+t*t*c.y};}
   function clampX(v,a,b){return Math.max(a,Math.min(b,v));}
   function easeOut(x){return 1-Math.pow(1-x,3);}
 
+  // 光晕（每帧一次径向渐变，廉价；托起整朵花）
   function drawAura(sway){
     var cx=BX+Math.sin(sway)*STALK_LEN*.1, cy=BY-STALK_LEN;
-    var r=STALK_LEN*.62;
-    var g=ctx.createRadialGradient(cx,cy,r*.1,cx,cy,r);
-    g.addColorStop(0,'rgba(255,51,72,.16)');
-    g.addColorStop(.55,'rgba(180,20,45,.07)');
+    var r=STALK_LEN*.66;
+    var g=ctx.createRadialGradient(cx,cy,r*.08,cx,cy,r);
+    g.addColorStop(0,'rgba(255,60,86,.30)');
+    g.addColorStop(.5,'rgba(190,25,55,.12)');
     g.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=g;
     ctx.fillRect(cx-r,cy-r,r*2,r*2);
   }
 
+  // 花茎：暗红主茎 + 一次柔光
   function drawStalk(p,sway){
     var tip={x:Math.sin(sway)*20*S,y:-STALK_LEN};
     ctx.save();ctx.translate(BX,BY);
@@ -204,35 +206,36 @@
       var pt=qb({x:0,y:0},{x:(P1x-BX),y:(P1y-BY)},tip,k/26*p);
       k===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y);
     }
-    ctx.lineWidth=5*S;
-    ctx.strokeStyle='#8a2e40';
-    ctx.shadowColor='rgba(255,51,72,.55)';ctx.shadowBlur=14;
+    ctx.lineWidth=5.5*S;
+    ctx.strokeStyle='#c0405a';            // 提亮的主茎色
+    ctx.shadowColor='rgba(255,60,86,.8)';
+    ctx.shadowBlur=12;                    // 仅此一处阴影
     ctx.stroke();
-    // 茎上高光
-    ctx.lineWidth=1.4*S;
-    ctx.strokeStyle='rgba(255,120,150,.35)';
     ctx.shadowBlur=0;
+    ctx.lineWidth=1.6*S;
+    ctx.strokeStyle='rgba(255,150,175,.5)';
     ctx.stroke();
     ctx.restore();
   }
+  // 草叶：压暗、变细（不再抢戏）
   function drawLeaves(g,sway){
     ctx.save();ctx.translate(BX,BY);ctx.rotate(sway*.5);ctx.lineCap='round';
     [-1,1].forEach(function(dr){
-      var L=Math.min(150,STALK_LEN*.34)*g*S;
+      var L=Math.min(140,STALK_LEN*.3)*g*S;
       if(L<3)return;
       ctx.beginPath();
       ctx.moveTo(0,-8*S);
       ctx.quadraticCurveTo(dr*L*.45,-20,dr*L*.95,-10-L);
-      ctx.lineWidth=4*S;
-      ctx.strokeStyle='#2f7d55';
-      ctx.shadowColor='rgba(60,180,120,.4)';ctx.shadowBlur=10;
+      ctx.lineWidth=3*S;
+      ctx.strokeStyle='#1e5a40';
       ctx.stroke();
     });
     ctx.restore();
   }
+  // 花蕊
   function drawStamens(g,sway){
     ctx.save();ctx.translate(BX,BY-STALK_LEN);ctx.rotate(sway);
-    var L=40*S*g;
+    var L=42*S*g;
     if(L<3)return;
     for(var k=0;k<STAM;k++){
       var a=k*Math.PI*2/STAM+Math.PI/7;
@@ -240,31 +243,20 @@
       ctx.beginPath();
       ctx.moveTo(ox*4*S,oy*4*S);
       ctx.quadraticCurveTo(ox*L*.7+(-oy)*L*.18,oy*L*.7+ox*L*.18,ox*L,oy*L);
-      ctx.lineWidth=1.5*S;
-      ctx.strokeStyle='#a9273d';
-      ctx.shadowColor='rgba(255,60,90,.6)';ctx.shadowBlur=8;
+      ctx.lineWidth=1.6*S;
+      ctx.strokeStyle='#d13a55';
       ctx.stroke();
     }
+    ctx.fillStyle='#ffd166';              // 黄点到头，无阴影
     for(var k2=0;k2<STAM;k2++){
       var a2=k2*Math.PI*2/STAM+Math.PI/7;
       ctx.beginPath();
-      ctx.arc(Math.cos(a2)*L,Math.sin(a2)*L,2.6*S,0,7);
-      ctx.fillStyle='#ffd166';
-      ctx.shadowColor='rgba(255,209,102,.9)';ctx.shadowBlur=12;
+      ctx.arc(Math.cos(a2)*L,Math.sin(a2)*L,2.8*S,0,7);
       ctx.fill();
     }
     ctx.restore();
   }
-  function petalPath(ang,L,curl,S){ // 外射 + 末端回勾, 用S缩放全部坐标
-    var ox=Math.cos(ang),oy=Math.sin(ang),px=-oy,py=ox;
-    function q(ax,ay){return [ox*L*ax+px*L*ay*curl, oy*L*ax+py*L*ay*curl];}
-    var m1=q(.52,.22),m2=q(.92,.1),m3=q(1.04,.06),m4=q(.86,.46),m5=q(.5,.05);
-    ctx.moveTo(0,0);
-    ctx.quadraticCurveTo(m1[0],m1[1],m2[0],m2[1]);
-    ctx.quadraticCurveTo(m3[0],m3[1],m4[0],m4[1]);
-    ctx.quadraticCurveTo(m5[0],m5[1],0,0);
-    ctx.closePath();
-  }
+  // 花瓣路径：外射 + 末端回勾（无阴影，纯平涂 → 性能开销降到最低）
   function drawBloom(bp,sway){
     ctx.save();
     ctx.translate(BX,BY-STALK_LEN);ctx.rotate(sway);
@@ -273,21 +265,26 @@
       if(bp<=start)continue;
       var pop=easeOut(clampX((bp-start)*PETS*.5,0,1));
       var a=i*Math.PI*2/PETS+Math.PI/2+Math.sin(i*1.7)*.16;
-      var L=(56+((i*7)%3)*16+(i%2)*8)*S*pop;
+      var L=(58+((i*7)%3)*16+(i%2)*8)*S*pop;
       if(L<5)continue;
       var curl=(i%3===0?1:(i%3===1?1.35:.8));
+      var ox=Math.cos(a),oy=Math.sin(a),px=-oy,py=ox;
       ctx.beginPath();
-      petalPath(a,L,curl,S);
-      ctx.globalAlpha=.95;
-      ctx.fillStyle='hsl('+(349+(i%4)*3)+','+(84+(i%2?4:0))+'%,'+(52+(i%4)*5)+'%)';
-      ctx.shadowColor='rgba(255,51,72,.85)';ctx.shadowBlur=12;
+      ctx.moveTo(0,0);
+      ctx.quadraticCurveTo(ox*L*.52+px*L*.22*curl,oy*L*.52+py*L*.22*curl,ox*L*.92+px*L*.1*curl,oy*L*.92+py*L*.1*curl);
+      ctx.quadraticCurveTo(ox*L*1.04+px*L*.06*curl,oy*L*1.04+py*L*.06*curl,ox*L*.86+px*L*.46*curl,oy*L*.86+py*L*.46*curl);
+      ctx.quadraticCurveTo(ox*L*.5+px*L*.05*curl,oy*L*.5+py*L*.05*curl,0,0);
+      ctx.closePath();
+      ctx.globalAlpha=.96;
+      ctx.fillStyle='hsl('+(351+(i%4)*3)+','+(86+(i%2?3:0))+'%,'+(56+(i%4)*6)+'%)';
       ctx.fill();
     }
     ctx.restore();ctx.globalAlpha=1;
   }
+  // 落瓣（无阴影平涂）
   function spawnFall(n){
-    if(fall.length>34)return;
-    var cx=BX+Math.sin(lastSway||0)*STALK_LEN*.1;
+    if(fall.length>28)return;
+    var cx=BX+Math.sin(lastSway)*STALK_LEN*.1;
     for(var i=0;i<(n||1);i++)fall.push({
       x:cx+(Math.random()-.5)*STALK_LEN*.4, y:BY-STALK_LEN+(Math.random()-.5)*STALK_LEN*.2,
       vx:(Math.random()-.5)*.6, vy:.55+Math.random()*.95,
@@ -295,25 +292,23 @@
       s:(8+Math.random()*8)*S, a:.92
     });
   }
-  var lastSway=0;
   function drawFallPetals(){
     fall=fall.filter(function(f){
       f.x+=f.vx;f.y+=f.vy;f.rot+=f.vr;f.a-=.0032;
       return f.y<h+20&&f.a>0;
     });
     fall.forEach(function(f){
+      var s=f.s;
       ctx.save();
       ctx.translate(f.x,f.y);ctx.rotate(f.rot);
       ctx.globalAlpha=Math.max(0,f.a);
-      var s=f.s;
       ctx.beginPath();
       ctx.moveTo(0,-s*1.2);
       ctx.quadraticCurveTo(s*.75,-s*.4,s*.62,s*.9);
       ctx.quadraticCurveTo(0,s*.55,-s*.5,s*.95);
       ctx.quadraticCurveTo(-s*.62,-s*.2,0,-s*1.2);
       ctx.closePath();
-      ctx.fillStyle='#e63852';
-      ctx.shadowColor='rgba(255,51,72,.9)';ctx.shadowBlur=10;
+      ctx.fillStyle='#e63a55';
       ctx.fill();
       ctx.restore();
     });
@@ -323,16 +318,14 @@
     var b=.5+Math.sin(ts*4)*.4;
     ctx.beginPath();
     ctx.arc(BX,BY-8*S,3*S+b*S,0,7);
-    ctx.fillStyle='rgba(255,60,80,'+(.45+b*.5)+')';
-    ctx.shadowColor='rgba(255,51,72,.95)';ctx.shadowBlur=16;
+    ctx.fillStyle='rgba(255,80,105,'+(.5+b*.5)+')';
     ctx.fill();
   }
   function snap(ts){
-    var sway=Math.sin(ts*.45)*.05;
-    drawAura(sway);drawStalk(1,sway);drawLeaves(1,sway);drawStamens(1,sway);drawBloom(1,sway);
+    var sw=Math.sin(ts*.45)*.05;
+    drawAura(sw);drawStalk(1,sw);drawLeaves(1,sw);drawStamens(1,sw);drawBloom(1,sw);
   }
-  function tick(now){
-    var ts=(now-T0)/1000;
+  function frame(ts){
     var sway=Math.sin(ts*.45)*.06+Math.sin(ts*.13+2)*.02;
     lastSway=sway;
     ctx.clearRect(0,0,w,h);
@@ -341,7 +334,7 @@
       if(p.x<-5)p.x=w+5;if(p.x>w+5)p.x=-5;if(p.y<-5)p.y=h+5;if(p.y>h+5)p.y=-5;
       ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle='rgba('+p.c+','+p.a+')';ctx.fill();
     });
-    if(ts>=1.2)drawAura(sway);                    // 光晕先亮
+    if(ts>=1.2)drawAura(sway);
     if(ts<0.7)drawSeed(ts);
     if(ts>=0.5)drawStalk(clampX((ts-.5)/2.9,0,1),sway);
     if(ts>=1.6)drawLeaves(clampX((ts-1.6)/1.3,0,1),sway);
@@ -349,9 +342,11 @@
     if(ts>=2.8)drawBloom(clampX((ts-2.8)/2.4,0,1),sway);
     if(ts>=4.6&&ts-lastFall>.45){lastFall=ts;spawnFall(2);}
     drawFallPetals();
+  }
+  function tick(now){
+    try{ frame((now-T0)/1000); }catch(e){ /* 单帧出错不停机 */ }
     requestAnimationFrame(tick);
   }
-  // 点击花头区域洒花瓣（canvas 是 pointer-events:none，用 window 坐标判断）
   window.addEventListener('click',function(e){
     var yy=BY-STALK_LEN+Math.sin(lastSway)*STALK_LEN*.1;
     var dx=e.clientX-BX,dy=e.clientY-yy;
