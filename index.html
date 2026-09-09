@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灵台 · 斜月</title>
+<meta name="description" content="灵台方寸山，斜月三星洞。手扎、灵蕴、神通、影神图、心猿。">
+<style>
+  :root{
+    --bg:#0a0a0b; --line:rgba(255,255,255,.12); --line2:rgba(255,255,255,.26);
+    --ink:#f5f5f5; --ink2:#b8b8b8; --muted:#6b6b70;
+    --red:#e64545; --red2:#ff5f5f;
+    --mono:ui-monospace,"JetBrains Mono","Cascadia Code",Consolas,monospace;
+    --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai",STKaiti,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:15.5px/1.8 -apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
+  /* 背景：静态网格 + 灰白光晕 + 单色光粒 */
+  .gridbg{position:fixed;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+    background-size:44px 44px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 78%);
+            mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 78%);}
+  .orb{position:fixed;border-radius:50%;filter:blur(110px);pointer-events:none}
+  .orb.a{width:560px;height:560px;top:-200px;left:-140px;background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%)}
+  .orb.b{width:480px;height:480px;top:-120px;right:-160px;background:radial-gradient(circle,rgba(255,255,255,.05),transparent 70%)}
+  canvas#fbg{position:fixed;inset:0;pointer-events:none}
+  /* 全屏纵向布局：nav / 居中题字 / 页脚 */
+  .wrap{position:relative;max-width:900px;margin:0 auto;padding:0 24px;min-height:100vh;display:flex;flex-direction:column}
+  /* 山门 */
+  nav{flex:none;display:flex;align-items:center;gap:4px;padding:24px 0 14px;font-family:var(--mono);border-bottom:1px solid var(--line)}
+  .logo{display:inline-flex;align-items:baseline;font-size:20px;font-weight:900;letter-spacing:5px;color:var(--ink);text-decoration:none;line-height:1}
+  .logo i{font-style:normal;color:#fff;font-size:14px;margin:0 2px}
+  /* 灵台·斜月 —— 点白、斜月朱红，'斜'字微倾；与"灵台"(无衬线/纯白)同基线同字号 */
+  .logo em{font-family:var(--kai);font-style:normal;font-weight:400;font-size:20px;letter-spacing:3px;color:var(--red)}
+  .logo em .xie{display:inline-block;transform:rotate(10deg)}
+  nav .sp{flex:1}
+  nav a.lk{color:var(--ink2);text-decoration:none;font-size:13px;padding:5px 13px;border-radius:999px;border:1px solid transparent;letter-spacing:2px;transition:.2s}
+  nav a.lk:hover{color:var(--red2);border-color:var(--red)}
+  /* 心跳区：空白点击同一区域 → 心猿浮出 */
+  .zone{width:112px;height:38px;border:1px solid transparent;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:default;transition:.3s}
+  .zone:hover{background:rgba(255,255,255,.04);border-color:var(--line)}
+  .zone .hk{opacity:0;pointer-events:none;transform:translateX(10px);transition:opacity .55s,transform .55s;text-decoration:none;color:var(--muted);font-size:11.5px;letter-spacing:5px;white-space:nowrap}
+  .zone.revealed{background:rgba(255,255,255,.05);border-color:var(--line2)}
+  .zone.revealed .hk{opacity:.8;pointer-events:auto;transform:none}
+  .zone.revealed .hk:hover{color:var(--red2);text-shadow:0 0 18px rgba(230,69,69,.55)}
+  /* 题字（垂直居中） */
+  header{flex:1;display:flex;flex-direction:column;justify-content:center;padding:6vh 0}
+  header{position:relative}
+  h1{font-size:clamp(42px,9vw,78px);font-weight:900;letter-spacing:12px;line-height:1.1;color:var(--ink);user-select:none;animation:floatY 9s ease-in-out infinite}
+  /* 灵台精致动效：逐字浮现 → 呼吸辉光 → 澄明光晕 → 缓慢上浮 */
+  h1 .ch{display:inline-block;opacity:0;filter:blur(22px);transform:translateY(20px);
+    animation:reveal 1.6s cubic-bezier(.16,1,.3,1) forwards, breathe 4.8s ease-in-out infinite}
+  h1 .t1{animation-delay:.12s,2.7s}
+  h1 .t2{animation-delay:.42s,3.3s}
+  @keyframes reveal{to{opacity:1;filter:blur(0);transform:none}}
+  @keyframes breathe{0%,100%{text-shadow:0 0 12px rgba(255,255,255,.16),0 0 30px rgba(255,255,255,.09)}50%{text-shadow:0 0 22px rgba(255,255,255,.4),0 0 64px rgba(255,255,255,.18)}}
+  @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  .aura{position:absolute;left:50%;top:45%;width:660px;max-width:96vw;height:230px;transform:translate(-50%,-50%);
+    background:radial-gradient(ellipse at center,rgba(255,255,255,.09),rgba(255,255,255,.025) 46%,transparent 70%);
+    filter:blur(30px);pointer-events:none;opacity:0;animation:auraB 8s ease-in-out 1.6s infinite}
+  @keyframes auraB{0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(1)}50%{opacity:.85;transform:translate(-50%,-51%) scale(1.08)}}
+  @media(prefers-reduced-motion:reduce){h1,.aura,h1 .ch{animation:none!important}h1 .ch{opacity:1;filter:none;transform:none}.aura{opacity:0}}
+  .sub{margin-top:20px;color:var(--ink2);font-size:15px;letter-spacing:2px;display:inline-block}
+  .sub .ch{display:inline-block;will-change:transform,opacity}
+  .typed{margin-top:32px;min-height:1.9em;color:var(--muted);font-size:14px;letter-spacing:4px;font-family:var(--mono)}
+  .typed .caret{display:inline-block;width:.5em;height:1.05em;margin-left:2px;background:var(--red);vertical-align:-.15em;animation:blink 1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  @keyframes h1glow{0%{filter:none}20%{filter:drop-shadow(0 0 26px rgba(255,255,255,.95)) drop-shadow(0 0 90px rgba(255,255,255,.4))}100%{filter:none}}
+  h1.flash{animation:h1glow 2s ease-out}
+  /* 页脚 */
+  footer{flex:none;padding:26px 0 40px;color:var(--muted);font-size:12px;font-family:var(--mono);line-height:2.3;text-align:center;border-top:1px solid var(--line)}
+  footer .st{color:var(--ink2)}
+  footer .st i{font-style:normal;color:var(--red)}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--ink)}
+  .corner{display:inline-block;font-size:11.5px;opacity:.4;letter-spacing:5px;transition:.3s;margin-top:4px}
+  .corner:hover{opacity:1;color:var(--red2);text-shadow:0 0 18px rgba(230,69,69,.55)}
+</style>
+</head>
+<body>
+<div class="gridbg"></div>
+<div class="orb a"></div><div class="orb b"></div>
+<canvas id="fbg"></canvas>
+
+<div class="wrap">
+  <nav id="nav">
+    <a class="logo" href="index.html">灵台<i>·</i><em><span class="xie">斜</span>月</em></a>
+    <span class="sp"></span>
+    <span class="zone" id="zone" title=""><a class="hk" href="posts/novel/">· 心猿 ·</a></span>
+    <a class="lk" href="posts/">手扎</a>
+  </nav>
+
+  <header>
+    <div class="aura"></div>
+    <h1 id="ttl"><span class="ch t1">灵</span><span class="ch t2">台</span></h1>
+    <p class="sub">灵台方寸山 · 斜月三星洞。</p>
+    <div class="typed"><span id="typedTxt"></span><span class="caret"></span></div>
+  </header>
+
+  <footer>
+    <a class="corner" href="posts/novel/">· 心猿 ·</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var cv=document.getElementById('fbg'),ctx=cv.getContext('2d'),w,h;
+  var reduced=matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // 光韵贴图
+  var spr=document.createElement('canvas');spr.width=spr.height=32;
+  var sc=spr.getContext('2d');
+  var sg=sc.createRadialGradient(16,16,0,16,16,16);
+  sg.addColorStop(0,'rgba(255,255,255,.85)');
+  sg.addColorStop(.38,'rgba(255,255,255,.24)');
+  sg.addColorStop(1,'rgba(255,255,255,0)');
+  sc.fillStyle=sg;sc.fillRect(0,0,32,32);
+
+  var pts=[],rings=[],clicked=[],clickedP=[],converging=false,glowN=0;
+  function rs(){w=cv.width=innerWidth;h=cv.height=innerHeight;}
+  rs();addEventListener('resize',rs);
+
+  // 光粒统一外观（初始 = 点击）
+  function mk(x,y){
+    var hot=Math.random()<.14;   // 少数"热点"更亮更大
+    return {x:x,y:y,r:(hot?Math.random()*.7+.7:Math.random()*.9+.4),
+      vx:(Math.random()-.5)*.26,vy:(Math.random()-.5)*.2,
+      a:(hot?.4+Math.random()*.24:.16+Math.random()*.36),h:hot?5.4:4.5};
+  }
+  var i;for(i=0;i<92;i++)pts.push(mk(Math.random()*innerWidth,Math.random()*innerHeight));
+
+  // "灵台"二字紧致包围盒
+  function textRect(){
+    var r=document.createRange();r.selectNodeContents(h1el);
+    var rc=r.getBoundingClientRect();
+    if(rc.width<8||rc.height<8){rc=h1el.getBoundingClientRect();}
+    return rc;
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    pts.forEach(function(p){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<-6)p.x=w+6;if(p.x>w+6)p.x=-6;if(p.y<-6)p.y=h+6;if(p.y>h+6)p.y=-6;
+      var hr=p.r*p.h;
+      ctx.globalAlpha=Math.min(1,p.a);
+      ctx.drawImage(spr,p.x-hr,p.y-hr,hr*2,hr*2);
+    });
+    ctx.globalAlpha=1;
+    // 聚拢：十粒飞向"灵台"文字区域内的随机点 → 到达消失
+    if(converging){
+      for(var k=clicked.length-1;k>=0;k--){
+        var p=clicked[k];
+        p.x+=(p.tx-p.x)*.09;p.y+=(p.ty-p.y)*.09;p.a*=.975;
+        var dx2=p.tx-p.x,dy2=p.ty-p.y;
+        if(dx2*dx2+dy2*dy2<120){
+          rings.push({x:p.tx,y:p.ty,r:6,a:.4});
+          pts.splice(pts.indexOf(p),1);clicked.splice(k,1);
+        }
+      }
+      if(clicked.length===0){
+        converging=false;
+        h1el.classList.add('flash');
+        setTimeout(function(){h1el.classList.remove('flash');},2050);
+      }
+    }
+    rings=rings.filter(function(r){r.r+=2.4;r.a-=.024;return r.a>0;});
+    rings.forEach(function(r){
+      ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,7);
+      ctx.strokeStyle='rgba(255,255,255,'+Math.max(0,r.a)+')';ctx.lineWidth=1;ctx.stroke();
+    });
+    requestAnimationFrame(tick);
+  }
+
+  var h1el=document.querySelector('h1');
+
+  // 打字机（原样）
+  var line='六根常清净，非是有心猿。';
+  var el=document.getElementById('typedTxt'),ci=0,del=false;
+  (function type(){
+    el.textContent=line.slice(0,ci);
+    if(!del){ci++;if(ci>line.length){del=true;setTimeout(type,3600);return;}setTimeout(type,150);}
+    else{if(ci>0){ci--;setTimeout(type,55);}else{del=false;setTimeout(type,900);}}
+  })();
+
+  // 副题：逐字线性乱颤 —— 每字独立引擎（±1px位移 / 300±80ms间隔 / ±1px大小 / ±20°旋转 / 透明度0.5-1 / 全程线性过渡）
+  if(!reduced){
+    var subEl=document.querySelector(".sub");
+    var chars=subEl.textContent.split("");
+    subEl.textContent="";
+    var CHS=[];
+    chars.forEach(function(c){
+      if(c===" "){subEl.appendChild(document.createTextNode(" "));return;}
+      var sp=document.createElement("span");sp.className="ch";sp.textContent=c;
+      subEl.appendChild(sp);
+      CHS.push({el:sp,t0:0,t1:-1,dur:300,fx:0,fy:0,fs:1,fr:0,tx:0,ty:0,ts:1,tr:0,ph:Math.random()*6.28,sp2:.7+Math.random()*.8});
+    });
+    (function chLoop(){
+      var t=performance.now();
+      CHS.forEach(function(c){
+        if(t>=c.t1){                        // 间隔到 → 抽新目标（线性过渡的起点=当前目标值）
+          c.t0=c.t1;c.dur=220+Math.random()*160;   // 300±80ms
+          c.t1=t+c.dur;
+          c.fx=c.tx;c.fy=c.ty;c.fs=c.ts;c.fr=c.tr; // from = 上一目标(终点即起点, 无跳变)
+          c.tx=(Math.random()*2-1)*1;               // 位移 ±1px 任意方向
+          c.ty=(Math.random()*2-1)*1;
+          c.ts=1+(Math.random()*2-1)*(1/15);        // 大小 ±1px (15px基准 → scale±1/15)
+          c.tr=(Math.random()*2-1)*20;              // 旋转 ±20°
+        }
+        var p=Math.min(1,(t-c.t0)/(c.dur||1));      // 线性插值: value = from + (to-from)*p
+        var L=function(a,b){return a+(b-a)*p;};
+        var o=.75+.25*Math.sin(t/1000*c.sp2+c.ph);  // 透明度 .5~1 正弦(不变)
+        c.el.style.transform="translate("+L(c.fx,c.tx).toFixed(2)+"px,"+L(c.fy,c.ty).toFixed(2)+"px) scale("+L(c.fs,c.ts).toFixed(4)+") rotate("+L(c.fr,c.tr).toFixed(2)+"deg)";
+        c.el.style.opacity=o.toFixed(2);
+      });
+      requestAnimationFrame(chLoop);
+    })();
+  }
+
+  // 心跳区（原样）：点击浮现心猿；3s 未点击则再隐去
+  var hzTimer=null;
+  document.getElementById('zone').addEventListener('click',function(){
+    this.classList.add('revealed');
+    clearTimeout(hzTimer);
+    hzTimer=setTimeout(function(){document.getElementById('zone').classList.remove('revealed');},3000);
+  });
+
+  // 点击：光粒(同款) + 涟漪；满10粒 → 聚拢点亮（主线，不再修改）
+  window.addEventListener('click',function(e){
+    if(e.target.closest('a,button'))return;
+    var np=mk(e.clientX,e.clientY);
+    pts.push(np);clickedP.push(np);
+    rings.push({x:e.clientX,y:e.clientY,r:5,a:.45});
+    if(!converging&&++glowN>=10){
+      var rc=textRect();
+      clicked=clickedP.slice();clickedP=[];
+      clicked.forEach(function(p){p.tx=rc.left+Math.random()*rc.width;p.ty=rc.top+Math.random()*rc.height;});
+      converging=true;glowN=0;
+    }
+  });
+
+  if(reduced){ctx.clearRect(0,0,w,h);
+    pts.forEach(function(p){var hr=p.r*p.h;ctx.globalAlpha=Math.min(1,p.a);ctx.drawImage(spr,p.x-hr,p.y-hr,hr*2,hr*2);});
+    ctx.globalAlpha=1;
+  } else requestAnimationFrame(tick);
+})();
+</script>>>>
+</body>
+</html>

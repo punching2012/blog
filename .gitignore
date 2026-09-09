@@ -1,0 +1,4 @@
+# 个人数据不入库
+daily-log.md
+# 小说设定/流程文档不入公开库(works 下仅章节 HTML 上站,md 全部排除)
+posts/novel/works/**/*.md
