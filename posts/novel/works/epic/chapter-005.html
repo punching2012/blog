@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>之五 · 守栈 · 天坠</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{ --bg:#fbfaf7; --card:#fffdf8; --border:#e9e4d8; --ink:#3d3730; --ink2:#6f6759; --muted:#a89f8e; --chip:#f4f0e6; --shadow:0 1px 2px rgba(61,55,48,.05),0 4px 16px rgba(61,55,48,.06); }
+  @media (prefers-color-scheme:dark){ :root{ --bg:#191713; --card:#221f19; --border:#383227; --ink:#e8e2d6; --ink2:#b5ab97; --muted:#7d7462; --chip:#2a261e; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.35);} }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/2 "Songti SC","STSong","SimSun","Noto Serif SC",serif}
+  .wrap{max-width:620px;margin:0 auto;padding:0 20px 70px}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:30px 0 8px;font-size:12px;color:var(--muted);letter-spacing:2px}
+  .top a{color:var(--muted);text-decoration:none}
+  .top a:hover{color:var(--ink2)}
+  h1{font-size:22px;font-weight:600;letter-spacing:6px;padding:16px 0 4px}
+  .d{color:var(--muted);font-size:12.5px;margin-bottom:26px;letter-spacing:1px}
+  .article p{text-indent:2em;margin-bottom:2px}
+  .sep{text-align:center;text-indent:0!important;color:var(--muted);letter-spacing:8px;margin:26px 0}
+  .doc{border:1px dashed var(--border);background:var(--chip);padding:14px 20px;margin:16px 0 18px;color:var(--ink2);font-size:14.5px;line-height:2.1}
+  .doc p{text-indent:0;text-align:center;letter-spacing:2px}
+  .end{margin-top:34px;text-align:center;text-indent:0!important;color:var(--muted);font-size:13px;letter-spacing:4px}
+  .nav{margin-top:18px;display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+  .nav a{color:var(--muted);text-decoration:none}
+  .nav a:hover{color:var(--ink2)}
+  footer{margin-top:30px;font-size:11.5px;color:var(--muted);letter-spacing:1px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a href="../../index.html">‹ 返回</a><span>天坠 · 卷一 · 枯井</span></div>
+  <h1>第五章 · 守栈</h1>
+  <div class="d">卷一《枯井》 · 之五 · 圣历三三七年</div>
+  <div class="article">
+    <p>出横野镇第二天,官道开始傍山。</p>
+    <p>左手是山,右手是川,道上车辙渐密——北去的车队多起来,骡马脊背上汗碱画出白痕。晌午,前头道旁出现一片车歇场:三排敞棚,饮骡的长槽,大车列着十几辆,卸了套的骡子在棚下倒嚼。</p>
+    <p>场子口的高杆上,挂着一面旗。皂底,白牙。</p>
+    <p>百牙的牙旗。</p>
+    <p>高烬的脚步慢了半拍。这面旗,他认得比自己的姓早。</p>
+    <p>场子里的人也杂:高颧的、卷发的、耳廓微尖的,一张张脸谁也不挨着谁,偏偏搭伙干活,谁也不多看谁。市井管这叫杂血,百牙自己管这叫一窝牙。</p>
+    <p>饮槽那头,一个老者在拌料。花白短须,背有点驼,手背上一道旧疤。料拌得极匀,杈起杈落,一下是一下。</p>
+    <p>高烬走过去,站定。</p>
+    <p>老者没抬头。拌完一把料,才抬起眼皮,看了他三息。</p>
+    <p>「高了。」</p>
+    <p>「叔。」</p>
+    <p class="sep">· · ·</p>
+    <p>守栈把料杈往槽沿一搭,又把他从头到脚看了一遍,像验一件长途运来的货:肩宽了,脸上的风霜够了——耳朵还那样。守栈的目光在那对耳朵上停了一瞬,什么也没说。</p>
+    <p>「吃了吗。」</p>
+    <p>「在路上吃过了。」</p>
+    <p>「干甚么营生。」</p>
+    <p>「替海邦跑腿。」</p>
+    <p>「去哪。」</p>
+    <p>「北岭。」</p>
+    <p>拌料的手停了。场子里只剩骡子倒嚼的声音。</p>
+    <p>「北岭的事,别沾。」守栈说。</p>
+    <p>高烬不瞒他:「接了雇书,收了定金。」</p>
+    <p>守栈盯着他看了半晌,忽然问:「钱很多?」</p>
+    <p>「二十珠币定金,一百尾款。」</p>
+    <p>「海邦的钱好数。」守栈低下头去,重新拿起料杈,「命不好数。」</p>
+    <p>一个半大小子抱着料袋子凑过来,添料添得毛手毛脚,耳朵却尖,插了句嘴:「爷,北岭修堑哩,募工一天二十钱,管两顿干的——」</p>
+    <p>守栈一眼扫过去。后半句没了。</p>
+    <p>「百牙不揽北岭的活。」守栈说。这话不像对少年说的,倒像对高烬说的,「割隘那年往后,就没揽过。」</p>
+    <p>高烬等着下文。没有下文。老兵的话像车辙,到哪儿算哪儿。</p>
+    <p>守栈拌完最后一把料,在槽边蹲下来,拍了拍手上的麸皮,从贴身处摸出一块木牌。枣木的,烙着一排牙印,边角磨得溜圆——是常年贴身带的物件。</p>
+    <p>「南麓百牙栈,你打小认得路。」他把木牌按进高烬手心,手糙,力气大,「带上。见栈出牌,报我名号。事急了,往栈里退——百牙的栈,还容得下一个崽。」</p>
+    <p>「叔——」</p>
+    <p>「不必。」守栈站起身,拍打膝盖上的土,「你十六岁那年走的时候,我说的是一句:活着回来。现在还是这一句。」</p>
+    <p class="sep">· · ·</p>
+    <p>晌午过后,车队套车开拔,往隘口方向去。高烬也要北上,不同路——车队走大道,他抄小径。</p>
+    <p>分手没有别的话。守栈塞给他一条口袋,粗布的,沉甸甸:炒过的料豆,拌了盐。</p>
+    <p>「路上嚼。」他说,「到了地头,给栈里捎个信。一个字也行。」</p>
+    <p>高烬应了。走出二里地,回头,牙旗还在风里,皂底白牙,旗角抽得笔直。车队已经上了大道,远远一串,像老辈人说的那样——百牙的车队从来不散着走,一窝牙,咬住道就不松口。</p>
+    <p>守栈没说完的话,他听懂了。沾了北岭的事会怎样,老兵见过——见过,才不说。</p>
+    <p>他把木牌贴身收了,和雇书放在一处。一纸差事,一块退路。</p>
+    <p>差事在前,退路在后。高烬按了按胸口,两样都在,往北走。</p>
+    <p class="end">( 之五 · 完 )</p>
+    <div class="nav"><a href="chapter-004.html">第四章 · 关牒</a><span>之六 · 未更</span></div>
+  </div>
+  <footer>· 存而未竟 · 只写给自己 ·</footer>
+</div>
+</body>
+</html>
