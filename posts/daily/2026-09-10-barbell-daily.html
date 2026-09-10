@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>位置仪表日报 · 9/10：三信号同向 · 灵台</title>
+<style>
+  :root{
+    --bg:#080b13; --panel:rgba(17,24,39,.72); --line:rgba(148,163,184,.16); --line2:rgba(148,163,184,.32);
+    --ink:#e5ecf5; --ink2:#96a3b8; --muted:#5b6a80; --cy:#e8e8e8; --vi:#a3a3a3;
+    --ok:#7fd1a8; --warn:#e8c068; --crit:#ff6b6b;
+    --glow:0 0 22px rgba(255,255,255,.2); --shadow:0 10px 40px rgba(0,0,0,.5);
+    --mono:ui-monospace,"JetBrains Mono","Cascadia Code",Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.95 -apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
+  .gridbg{position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(148,163,184,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.05) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 30%,transparent 75%)}
+  .wrap{position:relative;max-width:700px;margin:0 auto;padding:0 22px 70px}
+  .top{display:flex;justify-content:space-between;align-items:center;padding:24px 0 6px;font-size:13px;font-family:var(--mono)}
+  .top a{color:var(--muted);text-decoration:none}
+  .top a:hover{color:var(--cy)}
+  .top .s{color:#ff5f5f}
+  h1{font-size:26px;font-weight:900;padding:16px 0 6px;letter-spacing:2px;background:linear-gradient(92deg,#fff 20%,var(--cy) 60%,var(--vi));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .d{color:var(--muted);font-size:12.5px;font-family:var(--mono);margin-bottom:22px}
+  .article{border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(12px);border-radius:18px;padding:26px 28px;box-shadow:var(--shadow)}
+  .article p{margin-bottom:16px;color:var(--ink2)}
+  .article b{color:var(--cy)}
+  .article h3{font-size:15px;letter-spacing:2px;color:var(--cy);margin:26px 0 12px;padding-top:18px;border-top:1px dashed var(--line)}
+  .s-ok{color:var(--ok)} .s-warn{color:var(--warn)} .s-crit{color:var(--crit)}
+  .tw{overflow-x:auto;margin:0 0 16px}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;line-height:1.6}
+  th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+  th{color:var(--muted);font-weight:600;background:rgba(148,163,184,.06);white-space:nowrap}
+  td{color:var(--ink2)}
+  td.num{font-family:var(--mono);white-space:nowrap;color:var(--ink)}
+  .tags{margin-top:12px;padding-top:16px;border-top:1px dashed var(--line)}
+  .tags span{display:inline-block;font-size:11.5px;color:var(--ink2);background:rgba(148,163,184,.1);border:1px solid var(--line);border-radius:999px;padding:2px 10px;margin-right:6px;font-family:var(--mono)}
+  footer{margin-top:26px;color:var(--muted);font-size:12px;font-family:var(--mono);line-height:2}
+  footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="gridbg"></div>
+<div class="wrap">
+  <div class="top"><a href="../index.html">‹ 手扎</a><span class="s">● 灵蕴 / 2026-09-10</span></div>
+  <h1>位置仪表日报 · 9/10：三信号同向</h1>
+  <div class="d">2026-09-10 收盘后 · 境界: 灵蕴 · 阈值总表见《哑铃执行看板》</div>
+  <div class="article">
+    <p>第一次把每日流程完整跑成机器判态：11 路采集并行核实 14 项读数（多源交叉验证），独立复核员逐项对抗检查，每个触发项再做"先支持、后反驳、再裁定"的正反论证。本文只保留<b>市场信号与规则输出</b>——个人持仓、金额、进度一律不公开，涉个人项按示例口径处理。</p>
+
+    <h3>① 14 项读数（2026-09-10 休市后）</h3>
+    <div class="tw">
+    <table>
+      <thead><tr><th>信号</th><th>9/10 读数</th><th>阈值（节选）</th><th>状态</th></tr></thead>
+      <tbody>
+        <tr><td>飞天批价（散瓶）</td><td class="num">1715 元</td><td>≥1720● / &lt;1650 连3日或&lt;1600 ✕清仓</td><td class="s-warn">▲ 距●线 5 元</td></tr>
+        <tr><td>茅台收盘</td><td class="num">1285.13</td><td>≥1350● / &lt;1250 ✕清仓</td><td class="s-warn">▲ 距✕线 2.7%</td></tr>
+        <tr><td>QDII 场内溢价（513500）</td><td class="num">9.3%</td><td>≤1.5● / &gt;3 ✕停场内</td><td class="s-crit">✕ 维持场外</td></tr>
+        <tr><td>标普回撤</td><td class="num">-2.09%</td><td>&lt;10● / ≥15 ✕加码</td><td class="s-ok">●</td></tr>
+        <tr><td>纳指回撤</td><td class="num">-3.10%</td><td>&lt;12● / ≥20 ✕加码</td><td class="s-ok">●</td></tr>
+        <tr><td>伦敦金</td><td class="num">4395 美元</td><td>≥3800●定投 / ≥4800▲放缓</td><td class="s-ok">● 距1月峰约 -21%</td></tr>
+        <tr><td>10Y 国债</td><td class="num">1.68%</td><td>&lt;1.5● / 1.5–2▲ / &gt;2✕</td><td class="s-warn">▲ 全周走平</td></tr>
+        <tr><td>长电股息率</td><td class="num">3.56%</td><td>3.5–4.5 既定投 / &lt;3.5 ✕暂停</td><td class="s-warn">▲ 距✕线 0.06pp</td></tr>
+        <tr><td>银行 NIM（26Q2）</td><td class="num">1.41%</td><td>≥1.5● / 1.35–1.5▲ / &lt;1.35 ✕减配</td><td class="s-warn">▲ 复核，距✕线 0.06pp</td></tr>
+        <tr><td>红利 PE 分位</td><td class="num">约 82%</td><td>≥70▲不加指数 / ≥90 ✕减配</td><td class="s-warn">▲ 口径分歧待核实</td></tr>
+        <tr><td>卫星端占比</td><td class="num">个人项*</td><td>≤15● / 30–50▲超配 / &gt;50 ✕</td><td class="s-warn">▲ 超配（示例口径）</td></tr>
+        <tr><td>恒生电子</td><td class="num">21.05 元</td><td>&lt;20 ✕ 或 中报营收双位数下滑未见底 ✕</td><td class="s-crit">✕ 营收维度触发</td></tr>
+        <tr><td>科技拥挤度（26Q2）</td><td class="num">43.4%</td><td>&lt;25● / 25–40▲ / ≥40 ✕逆向</td><td class="s-crit">✕ 持续状态</td></tr>
+        <tr><td>CPI（8 月）</td><td class="num">+0.8%</td><td>连续 2 月&gt;3% → 黄金加档提示</td><td class="s-ok">● 记录，未触发</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="font-size:13px">*卫星端占比依赖个人持仓，本站一律示例口径不展示真实值；其"超配"状态由个人台账另行维护。</p>
+
+    <h3>② 触发三项（照表输出，不放宽）</h3>
+    <p><b class="s-crit">✕ 恒生电子 · 营收维度</b>——2026 中报营收 21.44 亿、同比 <b>-11.65%</b>（双位数下滑，两独立原文来源核实），且截至 9/10 无任何"见底"判定（最新券商表述仍是"收入短期承压、拐点待确认"）。阈值是"或"条件：破 20 元 <b>或</b> 营收双位数下滑未见底 → 加速减。价格维度未触发（21.05 &gt; 20，距 1.05 元）。正反论证的结论：营收与"未见底"两个要件均由核实数据支撑，"存量信息非今日新增"只影响紧迫性、不改变状态成立——<b>加速减</b>。解除条件：财报/研报明确判定收入见底。</p>
+    <p><b class="s-crit">✕ QDII 溢价 9.3%</b>——收盘 2.676 ÷ 最新净值 2.4484，连续 8 个交易日处于 8.0–10.2%，任一口径（含实时 IOPV 约 9.8%）都是 3% 线的三倍；发行人当天再度发布溢价风险提示公告。规则动作是停场内、走场外申购。新增事实：<b>场外通道额度已卡死</b>——两只场外联接基金单日限购分别只有 10 元 / 100 元（均开放赎回），场外大额建仓实质不可行。高溢价下不回场内，是这条信号唯一的可执行读法。</p>
+    <p><b class="s-crit">✕ 拥挤度 43.4%</b>——2026Q2 基金季报截面，广发/中信/中证报三家独立口径全部越 40% 线，超配幅度创历史纪录。规则动作：减卫星、加防守（逆向）。数据滞后 72 天（Q3 季报 10 月下旬才披露），但"实际持仓或已回落"只是无数据支撑的推测——凭推测暂停阈值动作，等于无数据放宽阈值。维持执行，10 月下旬校验。</p>
+
+    <h3>③ 临近清单（距阈值 ≤2% 或双向皆近）</h3>
+    <p>长电股息率距 3.5%✕线仅 0.06pp（股价约 28.57 即再破线，现价 28.09）；茅台收盘距 1250 清仓线 2.7%；批价距 1720●线仅 5 元（回升即回●），距 1650✕线 3.8%（连续计数当前 0 天）；恒生价格距 20 元线 5.0%（✕已由营收维度触发，价格距离不改状态）；NIM 距 1.35% 线 0.06pp。</p>
+
+    <h3>④ 一周复盘（9/3 → 9/10）</h3>
+    <p><b>白酒</b>：中秋备货把批价推到 9/4 高点（散瓶 1730 / 原箱 1755）后回落，9/7 起散瓶走平 1715 共四日——备货冲高回落后的走平状态，中秋证伪窗口看的是节后批价方向。茅台股价 9/4 冲 1330 后连续回落至 1285.13，距清仓线 2.7%。<b>卫星</b>：恒生电子周内 21.50→21.05，五粮液 9/4 冲 71.98 后回落、周度净跌 0.28%（9/8 仅微弹 +0.27%，不构成反弹），比亚迪一周 -4.3% 至 83.52——三只卫星集体阴跌，"反弹减"价位始终没出现。<b>美股</b>：标普/纳指 9/4–9/9 四连跌，回撤 -2.1% / -3.1%，浅回撤正常定投。<b>黄金</b>：9/3 曾单日冲高 +2.3%，随后回落到 4395 一线，高位震荡，距 1 月峰约 -21%。<b>利率</b>：10Y 全周钉在 1.68%，防守主仓环境没变。<b>宏观</b>：8 月 CPI +0.8%（食品拖累 0.21pct），温和，黄金加档提示不成立。</p>
+
+    <h3>⑤ 窗口倒计时</h3>
+    <p>今日不在任何执行窗口内。距 <b>9/20 五粮液时间兜底</b>还有 10 天——按当前走势（无反弹）届时大概率触发"无反弹仍阴跌 → 减"；距 <b>9/25–10/10 中秋证伪窗口</b>开启还有 15 天；10 月底三季报是恒生"见底与否"的下一验证点，也是拥挤度✕的校验点。</p>
+
+    <h3>⑥ 方法论脚注</h3>
+    <p>判态 = 照表执行：阈值不放宽、不新增、不"合理化"；无法核实的数据标待核实（本次红利 PE 分位各源在 58.7–87.7% 间分歧、跨档位，已按待核实处理并建议锁定主口径）；AI 只输出、不交易。本次数据全部多源交叉验证：A 股行情经腾讯/新浪/东财/搜狐接口互证，美股经东财/腾讯/纳斯达克官网 API 互证，财报数字经公告原文与两份独立研报核实。复核环节还抓出一处判态员笔误（NIM 的●线误写为 1.8%，实为 1.5%），已按总表原文修正——独立对抗复核不是走过场。</p>
+    <p style="font-size:13px">口径注：批价为"今日酒价"系 26 年散瓶口径；指数回撤按历史最高<b>收盘</b>计（标普 7798.99 @8/13、纳指 27093.90 @6/2）；美股读数截至美东 9/9 收盘；伦敦金为 9/10 盘中快照；QDII 溢价 = 场内收盘价 ÷ T-1 已公布净值。</p>
+    <div class="tags"><span>signals</span><span>daily</span><span>barbell</span></div>
+  </div>
+  <footer># 本站内容不构成投资建议 · 数据以交易所与基金公告为准 · 阈值总表 → <a href="../barbell-playbook.html">哑铃执行看板</a></footer>
+</div>
+</body>
+</html>
